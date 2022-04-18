@@ -15,6 +15,21 @@ def hello_world():
 # How do we get the info from the frontend? Through a form? Through the URL?
 # Once we find out how we get the info from frontend and how the frontend wants the
 # info back, we can start creating our routes
+# We also need to create the new tables in PGADMIN 
+#   - User, Watchlist, Rating, Post
+#   - Do not need genre (already given with movies table)
+#   - Movies table already made
+
+# User Table
+# Attributes: user_id (PK), user_age, user_first_name, user_last_name, user_favorite_movie_id, user_password, user_creation_date, is_admin
+# Watchlist Table
+# Attributes: watchlist_id(PK), movie_id, user_id -> Do not need watchlist_id, we can use as a bridge entity
+# Rating Table
+# Attributes: rating_id(PK), movie_id, user_id -> Do not need rating_id, we can use as a bridge entity
+# Post Table
+# Attributes: post_id(PK), user_id, post_description
+
+# Add google cloud credit using another teammates 465 coupon
 
 # Check Flask documentation on how to do post, delete, get requests
 # https://flask.palletsprojects.com/en/2.0.x/quickstart/
