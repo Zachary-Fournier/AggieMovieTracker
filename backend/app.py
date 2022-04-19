@@ -79,6 +79,23 @@ conn = psycopg2.connect(
     password="postgres")
 cur = conn.cursor()
 
+# GET USER INFORMATION WITH USERNAME, LATER WE WILL ADD A FUNCTION THAT GETS THE USER ID BASED ON THE USERNAME AND PASSWORD (LOGIN)
+@app.route("/get-user-info/<string:userName>")
+@cross_origin()
+def get_user_info(userName):
+    cur.execute("SELECT * FROM users WHERE UPPER(users.user_name) = UPPER(%s);", (userName,))
+    userInfo = cur.fetchall()[0]
+    print(userInfo)
+
+    
+    return {"user_name": userInfo[0],
+     "age": userInfo[1],
+     "favMovie": userInfo[2],
+     "numMovies": userInfo[3]
+    }
+
+
+# GET MOVIE INFORMATION WITH MOVIE ID
 @app.route("/get-movie-info/<string:movieID>")
 @cross_origin()
 def get_movie_info(movieID):
@@ -87,6 +104,7 @@ def get_movie_info(movieID):
     print(movieInfo)
     return {"movie": movieInfo}
 
+# GET MOVIES FROM THE MOVIE NAME (STRING)
 @app.route("/get-movies/<string:movie>")
 @cross_origin()
 def get_movies(movie):
