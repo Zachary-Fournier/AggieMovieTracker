@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import { Button, Input } from 'reactstrap';
+import React, { useState } from 'react'
+import { Link } from 'react-router-dom';
+import { Button, Input, Spinner } from 'reactstrap';
 import { getMoviesFromSearch } from '../Utilities';
 
 export default function HomePage() {
@@ -8,10 +8,12 @@ export default function HomePage() {
   const [userName, setUserName] = useState();
   const [searchInput, setSearchInput] = useState();
   const [movieResults, setMovieResults] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   
   async function onSearchButtonClick() {
+    setIsLoading(true);
     let results = await getMoviesFromSearch(searchInput);
-    console.log(results)
+    setIsLoading(false);
     setMovieResults(results.movies);
   }
 
@@ -26,12 +28,16 @@ export default function HomePage() {
         movieResults.map((movie, i) => {
           return (
             <div key={i}>
-              <h1>{movie[2]} ({movie[5]})</h1>
-              <hr></hr>
+              <Link to={`/movie/${movie[0]}`}>
+                {movie[2]} ({movie[5]})
+              </Link>
             </div>
           )
         })
       }
+      <br/>
+      {isLoading &&
+      <Spinner></Spinner>}
     </div>
   )
 }

@@ -33,14 +33,17 @@ cur = conn.cursor()
 # for i in range(len(lst)):
 #     print(lst[i])
 
-@app.route("/get-user-info/<string:userInfo>")
+@app.route("/get-movie-info/<string:movieID>")
 @cross_origin()
-def user_info(user):
-    cur.execute("select 1 from users where user_name = (%s);", (user))
+def get_movie_info(movieID):
+    cur.execute("SELECT * FROM movies WHERE tconst = (%s);", (movieID, ))
+    movieInfo = cur.fetchall()
+    print(movieInfo)
+    return {"movie": movieInfo}
 
 @app.route("/get-movies/<string:movie>")
 @cross_origin()
-def movie_info(movie):
+def get_movies(movie):
     cur.execute("SELECT * FROM movies WHERE UPPER(primary_title) = UPPER(%s) AND title_type = 'movie';", (movie,))
     movies = cur.fetchall()
     if len(movies) == 0:

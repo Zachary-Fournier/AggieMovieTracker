@@ -4,6 +4,7 @@ import { HashRouter, Route, Routes } from "react-router-dom";
 import { Navbar, NavbarBrand, NavItem, NavLink, Nav } from 'reactstrap';
 import HomePage from "./pages/HomePage";
 import ProfilePage from "./pages/ProfilePage";
+import MoviePage from "./pages/MoviePage";
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
         <Routes>
           <Route exact path="/" element={<HomePage />}/>
           <Route path="/profile" element={<ProfilePage />}/>
+          <Route path={`/movie/:movieID`} element={<MoviePage />} />
         </Routes>
       </HashRouter>
     </div>
