@@ -1,16 +1,8 @@
-from flask import Flask, request, jsonify
-import psycopg2
-
-app = Flask(__name__)
-
 # Create a bunch of helper functions that take SQL query as input and returns output
 # Ex: Returning a movie from the database
 # Create a bunch of helper functions that allow to add users and passwords and so on
 # Can add movies to movie list for that certain user and more
 
-@app.route("/")
-def hello_world():
-    return "Hello World"
 
 # How do we get the info from the frontend? Through a form? Through the URL?
 # Once we find out how we get the info from frontend and how the frontend wants the
@@ -63,16 +55,50 @@ def hello_world():
 
 
 # Example on how to connect and run SQL Query
+
+
+from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
+import psycopg2
+import json
+
+app = Flask(__name__)
+app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
+
+@app.route("/")
+@cross_origin()
+def hello_world():
+    return "Hello World"
+
+# CONNECTING TO POSTGRES, CAN USE THIS TO PUT DATA IN VARIABLES AND ADD TO ROUTES
 conn = psycopg2.connect(
     host="34.68.45.235",
     database="postgres",
     user="postgres",
     password="postgres")
 cur = conn.cursor()
-cur.execute("SELECT COUNT(tconst) FROM moviesreal")
-lst = cur.fetchall()
-for i in range(len(lst)):
-    print(lst[i])
+
+@app.route("/get-movie-info/<string:movieID>")
+@cross_origin()
+def get_movie_info(movieID):
+    cur.execute("SELECT * FROM moviesreal WHERE tconst = (%s);", (movieID, ))
+    movieInfo = cur.fetchall()
+    print(movieInfo)
+    return {"movie": movieInfo}
+
+@app.route("/get-movies/<string:movie>")
+@cross_origin()
+def get_movies(movie):
+    cur.execute("SELECT * FROM moviesreal WHERE UPPER(moviesreal.primarytitle) = UPPER(%s) AND moviesreal.titletype = 'movie';", (movie,))
+    # print("SELECT * FROM moviesreal WHERE UPPER(moviesreal.primarytitle) = UPPER(%s) AND moviesreal.titletype = 'movie';", (movie,))
+    movies = cur.fetchall()
+    if len(movies) == 0:
+        return "404 Not Found"
+    response = { "movies": movies}
+    
+    return response
+
 
 
 if __name__ == '__main__':
