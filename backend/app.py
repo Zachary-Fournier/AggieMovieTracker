@@ -1,11 +1,14 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS, cross_origin
 import psycopg2
 import json
 
 app = Flask(__name__)
-
+app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app)
 
 @app.route("/")
+@cross_origin()
 def hello_world():
     return "Hello World"
 # CONNECTING TO POSTGRES, CAN USE THIS TO PUT DATA IN VARIABLES AND ADD TO ROUTES
@@ -15,45 +18,38 @@ def hello_world():
 #         user="postgres",
 #         password="postgres"
 #     )
+conn = psycopg2.connect("dbname=310-Project user=postgres password=postgres")
+cur = conn.cursor()
+# print('testing')
+# conn = psycopg2.connect(
+#     host="34.68.45.235",
+#     database="postgres",
+#     user="postgres",
+#     password="postgres")
+# print('howdy')
 # cur = conn.cursor()
+# cur.execute("SELECT COUNT(tconst) FROM moviesreal")
+# lst = cur.fetchall()
+# for i in range(len(lst)):
+#     print(lst[i])
 
 @app.route("/get-user-info/<string:userInfo>")
+@cross_origin()
 def user_info(user):
     cur.execute("select 1 from users where user_name = (%s);", (user))
 
-@app.route("/get-movie-info/<string:movie>")
+@app.route("/get-movies/<string:movie>")
+@cross_origin()
 def movie_info(movie):
-    cur.execute("SELECT * FROM movies WHERE UPPER(primary_title) = UPPER(%s);", (movie,))
+    cur.execute("SELECT * FROM movies WHERE UPPER(primary_title) = UPPER(%s) AND title_type = 'movie';", (movie,))
     movies = cur.fetchall()
     if len(movies) == 0:
         return "404 Not Found"
-    response = {}
-    for movie in movies:
-        response[movie[0]] = {
-            'tconst': movie[0],
-            'title_type': movie[1],
-            'primary_title': movie[2],
-            'original_title': movie[3],
-            'isAdult': movie[4],
-            'startYear': movie[5],
-            'endYear': movie[6],
-            'runtime': movie[7],
-            'genres': movie[8]
-        }
+    response = { "movies": movies}
     
     return response
 
 
-# conn = psycopg2.connect("dbname=310-Project user=postgres password=postgres")
-conn = psycopg2.connect(
-    host="34.68.45.235",
-    database="postgres",
-    user="postgres",
-    password="postgres")
-cur = conn.cursor()
-cur.execute("SELECT COUNT(tconst) FROM moviesreal")
-lst = cur.fetchall()
-for i in range(len(lst)):
-    print(lst[i])
+
 if __name__ == '__main__':
     app.run()
