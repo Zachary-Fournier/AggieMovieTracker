@@ -57,7 +57,7 @@
 # Example on how to connect and run SQL Query
 
 
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
 import psycopg2
 import json
@@ -113,8 +113,7 @@ def get_movies(movie):
     movies = cur.fetchall()
     if len(movies) == 0:
         return "404 Not Found"
-    response = jsonify({ "movies": movies})
-    response.headers.add("Access-Control-Allow-Origin", "*")
+    response = { "movies": movies}
     return response
 
 @app.route("/get-posts")
