@@ -7,6 +7,7 @@ import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
 import MoviePage from './pages/MoviePage';
 import RegisterPage from './pages/RegisterPage';
+import NewsFeedPage from './pages/NewsFeedPage';
 
 function App() {
 
@@ -25,6 +26,9 @@ function App() {
             <NavItem>
               <NavLink href="/#/login">Login</NavLink>
             </NavItem>
+            <NavItem>
+              <NavLink href="/#/newsfeed">News Feed</NavLink>
+            </NavItem>
           </Nav>
         </Navbar>
         <Routes>
@@ -32,6 +36,7 @@ function App() {
           <Route path="/profile" element={<ProfilePage />}/>
           <Route path="/login" element={<LoginPage />}/>
           <Route path="/register" element={<RegisterPage />}/>
+          <Route path="/newsfeed" element={<NewsFeedPage />}/>
           <Route path={`/movie/:movieID`} element={<MoviePage />} />
         </Routes>
       </HashRouter>

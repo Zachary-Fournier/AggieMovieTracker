@@ -117,6 +117,12 @@ def get_movies(movie):
     
     return response
 
+@app.route("/get-posts")
+@cross_origin()
+def get_posts():
+
+    return []
+
 
 
 if __name__ == '__main__':
