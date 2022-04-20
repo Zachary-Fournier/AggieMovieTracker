@@ -113,8 +113,8 @@ def get_movies(movie):
     movies = cur.fetchall()
     if len(movies) == 0:
         return "404 Not Found"
-    response = { "movies": movies}
-    
+    response = jsonify({ "movies": movies})
+    response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
 @app.route("/get-posts")
