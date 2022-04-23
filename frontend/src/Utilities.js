@@ -51,8 +51,6 @@ export async function getUserPosts(userName) {
 }
 
 
-
-
 export async function getMovieInfo(movieID) {
     let movieInfo = fetch(`${url}/get-movie-info/${movieID}`)
         .then(response => response.json())
@@ -76,10 +74,15 @@ export async function getMoviesFromSearch(query) {
     return movies;
 }
 
-export async function getPosts() {
-    let posts = fetch(`${url}/get-posts`)
-        .then(response => response.json())
-        .then(result => {return result});
 
-    return posts
+// ADD FUNCTIONS FOR POST ROUTES
+// Is it the same as the get routes? We just execute it and it will update??
+// Try function below?
+export async function addUser(userName, userPassword) {
+    let res = fetch(`${url}/add-user/${userName}/${userPassword}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    // Res will return "Success" or "Failure" inside of response key
+    return res;
 }

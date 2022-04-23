@@ -93,6 +93,7 @@ def getMovieNameFromMovieId(cur, movieID):
 
 
 
+
 # GET USER INFORMATION WITH USERNAME, LATER WE WILL ADD A FUNCTION THAT GETS THE USER ID BASED ON THE USERNAME AND PASSWORD (LOGIN)
 @app.route("/get-user-info/<string:userName>")
 @cross_origin()
@@ -135,6 +136,7 @@ def get_user_id(userName):
 @cross_origin()
 def get_user_reviews(userName):
     userId = getUserIdFromUserName(cur, userName)
+    userID = str(userID)
     # First find the user id with userName
     cur.execute("select movie_id, num_stars from rating where user_id = (%s);", (userId,))
     data = cur.fetchall()
@@ -157,6 +159,7 @@ def get_user_reviews(userName):
 @cross_origin()
 def get_user_watchlist(userName):
     # First find the user id with userName
+    userID = str(userID)
     userId = getUserIdFromUserName(cur, userName)
     cur.execute("select movie_id from watchlist where user_id = (%s);", (userId,))
     data = cur.fetchall()
@@ -173,6 +176,7 @@ def get_user_watchlist(userName):
 @app.route("/get-user-posts/<string:userId>")
 @cross_origin()
 def get_user_posts(userId):
+    userID = str(userID)
     # First find the user id with userName
     cur.execute("select post_description from posts where user_id = (%s);", (userId,))
     data = cur.fetchall()
@@ -203,6 +207,95 @@ def get_movies(movie):
         return "404 Not Found"
     response = { "movies": movies}
     return response
+
+# POST REQUESTS
+# Create a new user with password
+# GET MOVIE INFORMATION WITH MOVIE ID
+@app.route("/add-user/<string:userName>/<string:userPassword>")
+@cross_origin()
+def add_user(userName, userPassword):
+    try:
+        sqlStmt = "INSERT INTO users (user_name, num_movies_watched, password, is_admin) VALUES ('{}', 0, '{}', false);".format(userName, userPassword)
+        cur.execute(sqlStmt)
+        conn.commit()
+        data = "Success"
+    except:
+        data = "Failure"
+    return {"response": data}
+
+# user Id, movie Id, and rating as input -> Add movie review into database (POST)
+# Need to do two things: Add to rating table and add to users table (adding to num_movies_watched)
+# If needed, we can later change the userID to userName and movieID to movie name
+@app.route("/add-rating/<string:userID>/<string:movieID>/<int:num_stars>")
+@cross_origin()
+def add_rating(userID, movieID, numStars):
+    try:
+        userID = str(userID)
+        sqlStmt = "INSERT INTO rating (movie_id, user_id, num_stars) VALUES ('{}', '{}', {});".format(movieID, userID, numStars)
+        cur.execute(sqlStmt)
+        conn.commit()
+        # Increase by one in num movies for specific user id
+        # First find the num_movies in users table and then use an update for the sql command
+        cur.execute("select num_movies_watched from users where user_id = {};".format(int(userID)))
+        numMovies = cur.fetchone()[0]
+        sqlStmt = "UPDATE users SET num_movies_watched = '{}' WHERE user_id = {};".format(str(numMovies), userID)
+        cur.execute(sqlStmt)
+        conn.commit()
+        data = "Success"
+    except:
+        data = "Failure"
+    return {"response": data}
+
+# UserID, movie -> Add to movie watchlist
+@app.route("/add-to-watchlist/<string:userID>/<string:movieID>")
+@cross_origin()
+def add_to_watchlist(userID, movieID):
+    try:
+        userID = str(userID)
+        sqlStmt = "INSERT INTO watchlist (user_id, movie_id) VALUES ('{}', '{}');".format(userID, movieID)
+        cur.execute(sqlStmt)
+        conn.commit()
+        
+        data = "Success"
+    except:
+        data = "Failure"
+    return {"response": data}
+
+
+
+# Update favorite movie, userID as input
+@app.route("/update-favorite-movie/<string:userID>/<string:movieID>")
+@cross_origin()
+def update_favorite_movie(userID, movieID):
+    try:
+        # First get the movie name from the movieID
+        userID = str(userID)
+        movieName = getMovieNameFromMovieId(cur, movieID)
+        sqlStmt = "UPDATE users SET favorite_movie = '{}' WHERE user_id = {};".format(movieName, userID)
+        cur.execute(sqlStmt)
+        conn.commit()
+        
+        data = "Success"
+    except:
+        data = "Failure"
+    return {"response": data}
+
+# Create a post for userID
+@app.route("/add-post/<string:userID>/<string:postDescription>")
+@cross_origin()
+def add_post(userID, postDescription):
+    try:
+        # First get the movie name from the movieID
+        userID = str(userID)
+        sqlStmt = "INSERT INTO posts (user_id, post_description) VALUES ('{}', '{}');".format(userID, postDescription)
+        cur.execute(sqlStmt)
+        conn.commit()
+        
+        data = "Success"
+    except:
+        data = "Failure"
+    return {"response": data}
+
 
 
 
