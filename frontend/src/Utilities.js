@@ -10,6 +10,49 @@ export async function getUserInfo(userName) {
     return userInfo;
 }
 
+export async function getUserPass(userName) {
+    let userInfo = fetch(`${url}/get-user-password/${userName}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    return userInfo;
+}
+
+export async function getUserID(userName) {
+    let data = fetch(`${url}/get-user-ID/${userName}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    return data;
+}
+
+export async function getUserWatchlist(userName) {
+    let data = fetch(`${url}/get-user-watchlist/${userName}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    return data;
+}
+
+export async function getUserReviews(userName) {
+    let data = fetch(`${url}/get-user-reviews/${userName}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    return data;
+}
+
+export async function getUserPosts(userName) {
+    let data = fetch(`${url}/get-user-posts/${userName}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    return data;
+}
+
+
+
+
 export async function getMovieInfo(movieID) {
     let movieInfo = fetch(`${url}/get-movie-info/${movieID}`)
         .then(response => response.json())
