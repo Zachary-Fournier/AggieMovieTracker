@@ -1,4 +1,5 @@
 import React, { useEffect, useState} from 'react'
+import { Button } from 'reactstrap';
 import { getMovieInfo, getMoviePoster } from '../Utilities';
 
 export default function MoviePage() {
@@ -10,9 +11,13 @@ export default function MoviePage() {
         let results = await getMovieInfo(window.location.href.slice(30));
         let posterPath = await getMoviePoster(window.location.href.slice(30));
         setMovieInfo(results.movie[0]);
-        console.log(posterPath.movie_results[0].poster_path)
         setMoviePosterURL(`http://image.tmdb.org/t/p/original${posterPath.movie_results[0].poster_path}`)
     }
+
+    async function rateMovie() {
+        console.log('rateMovie');
+    }
+    
 
     useEffect(() => {
         getMovie();
@@ -32,6 +37,7 @@ export default function MoviePage() {
                     <p>avg rating</p> <br/>
                     <img src={moviePosterURL} style={{width: "25%", height: "50%"}}>
                     </img>
+                    <Button onClick={rateMovie()}>Leave a Rating!</Button>
                 </div>
             )
             }

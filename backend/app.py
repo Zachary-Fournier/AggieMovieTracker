@@ -55,7 +55,7 @@
 # Example on how to connect and run SQL Query
 
 
-from flask import Flask, request, jsonify
+from flask import Flask, jsonify
 from flask_cors import CORS, cross_origin
 import psycopg2
 import json
@@ -202,13 +202,7 @@ def get_movies(movie):
     if len(movies) == 0:
         return "404 Not Found"
     response = { "movies": movies}
-    
     return response
-
-# TESTING
-userName = "John Doe"
-# First find the user id with userName
-
 
 
 

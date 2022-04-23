@@ -75,3 +75,11 @@ export async function getMoviesFromSearch(query) {
 
     return movies;
 }
+
+export async function getPosts() {
+    let posts = fetch(`${url}/get-posts`)
+        .then(response => response.json())
+        .then(result => {return result});
+
+    return posts
+}
