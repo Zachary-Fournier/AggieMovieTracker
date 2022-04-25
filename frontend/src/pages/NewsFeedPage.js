@@ -1,16 +1,16 @@
 import React, { useEffect, useState } from 'react'
-import { getPosts } from '../Utilities';
+import { getUserPosts } from '../Utilities';
 
 export default function NewsFeedPage() {
 
     const [posts, setPosts] = useState([]);
     async function getInfo() {
-        let results = getPosts();
+        let results = getUserPosts();
         setPosts(results);
     }
 
     useEffect(() => {
-        getInfo()
+        getInfo();
     }, [])
     return (
         <div>
