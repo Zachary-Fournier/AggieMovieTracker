@@ -91,7 +91,10 @@ def getMovieNameFromMovieId(cur, movieID):
     movies = cur.fetchall()
     return movies[0][0]
 
-
+userName = "John Doe"
+cur.execute("SELECT * FROM users WHERE UPPER(users.user_name) = UPPER(%s);", (userName,))
+userInfo = cur.fetchall()[0]
+print(userInfo)
 
 
 # GET USER INFORMATION WITH USERNAME, LATER WE WILL ADD A FUNCTION THAT GETS THE USER ID BASED ON THE USERNAME AND PASSWORD (LOGIN)
@@ -106,7 +109,10 @@ def get_user_info(userName):
     return {"user_name": userInfo[0],
      "age": userInfo[1],
      "favMovie": userInfo[2],
-     "numMovies": userInfo[3]
+     "numMovies": userInfo[3],
+     "userID": userInfo[4],
+     "password": userInfo[5],
+     "isAdmin": userInfo[6]
     }
 
 # GET USER PASSWORD WITH USERNAME, USE TO CHECK IF MATCHES IN LOGIN
