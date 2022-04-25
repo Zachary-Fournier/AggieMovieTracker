@@ -232,6 +232,8 @@ def add_user(userName, userPassword):
             cur.execute(sqlStmt)
             conn.commit()
             data = "Success"
+        else:
+            data = "Failure"
     except:
         data = "Failure"
     return {"response": data}
