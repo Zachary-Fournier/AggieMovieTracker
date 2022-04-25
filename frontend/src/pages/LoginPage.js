@@ -63,7 +63,7 @@ export default function LoginPage() {
                </Button>
            </Form>
            {!isValidPassword && 
-            <Alert color='emergency'>Please enter in a valid password!</Alert>
+            <Alert color='danger'>Please enter in a valid username/password combination!</Alert>
            }
         </div>
     )
