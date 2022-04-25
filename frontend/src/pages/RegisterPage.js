@@ -34,7 +34,11 @@ export default function RegisterPage() {
                             <Input
                                 placeholder='Enter username'
                                 value={userName}
-                                onChange={(e) => {setUserName(e.target.value);}}
+                                onChange={(e) => {
+                                    setUserName(e.target.value);
+                                    setDidAccountCreationFail(false);
+                                    setIsAccountCreated(false);
+                                }}
                             />
                         </FormGroup>
                     </Col>
@@ -47,7 +51,11 @@ export default function RegisterPage() {
                                 placeholder='Enter password'
                                 type='password'
                                 value={password}
-                                onChange={(e) => {setPassword(e.target.value);}}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    setDidAccountCreationFail(false);
+                                    setIsAccountCreated(false);
+                                }}
                             />
                         </FormGroup>
                     </Col>
