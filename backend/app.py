@@ -91,10 +91,7 @@ def getMovieNameFromMovieId(cur, movieID):
     movies = cur.fetchall()
     return movies[0][0]
 
-userName = "John Doe"
-cur.execute("SELECT * FROM users WHERE UPPER(users.user_name) = UPPER(%s);", (userName,))
-userInfo = cur.fetchall()[0]
-print(userInfo)
+
 
 
 # GET USER INFORMATION WITH USERNAME, LATER WE WILL ADD A FUNCTION THAT GETS THE USER ID BASED ON THE USERNAME AND PASSWORD (LOGIN)
@@ -107,12 +104,11 @@ def get_user_info(userName):
 
     
     return {"user_name": userInfo[0],
-     "age": userInfo[1],
-     "favMovie": userInfo[2],
-     "numMovies": userInfo[3],
-     "userID": userInfo[4],
-     "password": userInfo[5],
-     "isAdmin": userInfo[6]
+     "favMovie": userInfo[1],
+     "numMovies": userInfo[2],
+     "userID": userInfo[3],
+     "password": userInfo[4],
+     "isAdmin": userInfo[5]
     }
 
 # GET USER PASSWORD WITH USERNAME, USE TO CHECK IF MATCHES IN LOGIN
@@ -213,6 +209,11 @@ def get_movies(movie):
         return "404 Not Found"
     response = { "movies": movies}
     return response
+userName = "John Doee"
+sqlStmt = "select * from users where user_name = '{}';".format(userName)
+cur.execute(sqlStmt)
+data = cur.fetchall()
+print(data)
 
 # POST REQUESTS
 # Create a new user with password
@@ -220,11 +221,17 @@ def get_movies(movie):
 @app.route("/add-user/<string:userName>/<string:userPassword>")
 @cross_origin()
 def add_user(userName, userPassword):
+
     try:
-        sqlStmt = "INSERT INTO users (user_name, num_movies_watched, password, is_admin) VALUES ('{}', 0, '{}', false);".format(userName, userPassword)
+        # First check if the userName already exists
+        sqlStmt = "select * from users where user_name = '{}';".format(userName)
         cur.execute(sqlStmt)
-        conn.commit()
-        data = "Success"
+        data = cur.fetchall()
+        if len(data) == 0:    
+            sqlStmt = "INSERT INTO users (user_name, num_movies_watched, password, is_admin) VALUES ('{}', 0, '{}', false);".format(userName, userPassword)
+            cur.execute(sqlStmt)
+            conn.commit()
+            data = "Success"
     except:
         data = "Failure"
     return {"response": data}
