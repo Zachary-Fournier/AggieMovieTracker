@@ -263,7 +263,7 @@ def add_to_watchlist(userID, movieID):
 
 
 
-# Update favorite movie, userID as input
+# Update favorite movie, userID as input, movieID as input
 @app.route("/update-favorite-movie/<string:userID>/<string:movieID>")
 @cross_origin()
 def update_favorite_movie(userID, movieID):

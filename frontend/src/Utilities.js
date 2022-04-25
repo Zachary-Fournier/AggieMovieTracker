@@ -86,3 +86,44 @@ export async function addUser(userName, userPassword) {
     // Res will return "Success" or "Failure" inside of response key
     return res;
 }
+
+export async function addRating(userID, movieID, num_stars) {
+    let res = fetch(`${url}/add-rating/${userID}/${movieID}/${num_stars}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    // Res will return "Success" or "Failure" inside of response key
+    return res;
+}
+
+export async function addToWatchlist(userID, movieID) {
+    let res = fetch(`${url}/add-to-watchlist/${userID}/${movieID}}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    // Res will return "Success" or "Failure" inside of response key
+    return res;
+}
+
+export async function updateFavoriteMovie(userID, movieID) {
+    let res = fetch(`${url}/update-favorite-movie/${userID}/${movieID}}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    // Res will return "Success" or "Failure" inside of response key
+    return res;
+}
+
+export async function addPost(userID, postDecription) {
+    let res = fetch(`${url}/add-post/${userID}/${postDecription}}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    // Res will return "Success" or "Failure" inside of response key
+    return res;
+}
+
+
+
+
+
