@@ -116,7 +116,17 @@ export async function addToWatchlist(userID, movieID) {
     return res;
 }
 
-// Updating a user through update route from backend (app.js)
+// Updating a user TO ADMIN through update route from backend (app.js)
+export async function makeAdmin(userID) {
+    let res = fetch(`${url}/make-admin/${userID}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    // Res will return "Success" or "Failure" inside of response key
+    return res;
+}
+
+// Updating a user's favorite movie through update route from backend (app.js)
 export async function updateFavoriteMovie(userID, movieID) {
     let res = fetch(`${url}/update-favorite-movie/${userID}/${movieID}}`)
         .then(response => response.json())
