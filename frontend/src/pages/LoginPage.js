@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormGroup, Label, Input, Button, Alert } from 'reactstrap';
 import { getUserInfo, getUserPass } from '../Utilities';
@@ -21,15 +21,15 @@ export default function LoginPage() {
      */
     async function loginUser() {
         let result = await getUserPass(userName);
-        if(result.password[0][0] == password) {
+        if(result.password[0][0] === password) {
             // put user info into local storage
             let userInfo = await getUserInfo(userName);
 
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
-            
-            navigate('/profile');
+            navigate('/');
+            window.location.reload();
         } else {
-            setIsValidPassword(false)
+            setIsValidPassword(false);
         }
 
     }

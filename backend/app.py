@@ -1,7 +1,4 @@
-# Create a bunch of helper functions that take SQL query as input and returns output
-# Ex: Returning a movie from the database
-# Create a bunch of helper functions that allow to add users and passwords and so on
-# Can add movies to movie list for that certain user and more
+# MAHIR KHAN
 
 
 # How do we get the info from the frontend? Through a form? Through the URL?
@@ -78,19 +75,31 @@ conn = psycopg2.connect(
     password="postgres")
 cur = conn.cursor()
 
+movieName = "Thor"
+cur.execute("SELECT tconst FROM moviesreal WHERE UPPER(moviesreal.primarytitle) = UPPER(%s);", (movieName, ))
+movies = cur.fetchall()
+print(movies[0][0])
 
-
-# HELPER FUNCTIONS
+# HELPER FUNCTIONS. WE CAN CONVERT ID TO USERNAME OR MOVIE NAME TO ID
 def getUserIdFromUserName(cur, userName):
     cur.execute("select user_id from users where user_name = (%s);", (userName,))
     userId = cur.fetchall()
     return str(userId[0][0])
+
+def getUserNameFromUserId(cur, userID):
+    cur.execute("select user_name from users where user_id = (%s);", (str(userID),))
+    userName = cur.fetchall()
+    return str(userName[0][0])
 
 def getMovieNameFromMovieId(cur, movieID):
     cur.execute("SELECT primarytitle FROM moviesreal WHERE tconst = (%s);", (movieID, ))
     movies = cur.fetchall()
     return movies[0][0]
 
+def getMovieIdFromMovieName(cur, movieName):
+    cur.execute("SELECT tconst FROM moviesreal WHERE UPPER(moviesreal.primarytitle) = UPPER(%s);", (movieName, ))
+    movies = cur.fetchall()
+    return movies[0][0]
 
 
 
@@ -209,11 +218,6 @@ def get_movies(movie):
         return "404 Not Found"
     response = { "movies": movies}
     return response
-userName = "John Doee"
-sqlStmt = "select * from users where user_name = '{}';".format(userName)
-cur.execute(sqlStmt)
-data = cur.fetchall()
-print(data)
 
 # POST REQUESTS
 # Create a new user with password
@@ -310,8 +314,6 @@ def add_post(userID, postDescription):
     except:
         data = "Failure"
     return {"response": data}
-
-
 
 
 if __name__ == '__main__':
