@@ -21,8 +21,7 @@ function App() {
     } else {
       setIsLoggedIn(false);
     }
-    console.log(isLoggedIn)
-  }, [localStorage.getItem('userInfo')]);
+  }, []);
 
   return (
     <div className="App">
