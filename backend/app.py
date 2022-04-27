@@ -192,10 +192,6 @@ def get_user_posts(userId):
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
     return {"posts": data}
 
-cur.execute("select * from posts;")
-data = cur.fetchall()
-print(data)
-
 # GET ALL OF THE POSTS FOR ALL USERS
 @app.route("/get-all-posts/")
 @cross_origin()
@@ -316,6 +312,29 @@ def update_favorite_movie(userID, movieID):
         userID = str(userID)
         movieName = getMovieNameFromMovieId(cur, movieID)
         sqlStmt = "UPDATE users SET favorite_movie = '{}' WHERE user_id = {};".format(movieName, userID)
+        cur.execute(sqlStmt)
+        conn.commit()
+        data = "Success"
+    except:
+        data = "Failure"
+
+    return {"response": data}
+
+userID = 1
+movieID = 'tt2501692'
+userID = str(userID)
+sqlStmt = "DELETE FROM watchlist WHERE user_id = '{}' and movie_id = '{}';".format(userID, movieID)
+cur.execute(sqlStmt)
+conn.commit()
+
+# Update favorite movie, userID as input, movieID as input
+@app.route("/delete-movie-from-watchlist/<string:userID>/<string:movieID>")
+@cross_origin()
+def delete_from_watchlist(userID, movieID):
+    try:
+        # First get the movie name from the movieID
+        userID = str(userID)
+        sqlStmt = "DELETE FROM watchlist WHERE user_id = '{}' and movie_id = '{}';".format(userID, movieID)
         cur.execute(sqlStmt)
         conn.commit()
         data = "Success"

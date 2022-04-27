@@ -125,6 +125,16 @@ export async function addToWatchlist(userID, movieID) {
     return res;
 }
 
+// Delte a movie for user wathchlist through delete route from backend (app.js)
+export async function deleteFromWatchlist(userID, movieID) {
+    let res = fetch(`${url}/delete-movie-from-watchlist/${userID}/${movieID}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    // Res will return "Success" or "Failure" inside of response key
+    return res;
+}
+
 // Updating a user TO ADMIN through update route from backend (app.js)
 export async function makeAdmin(userID) {
     let res = fetch(`${url}/make-admin/${userID}`)
