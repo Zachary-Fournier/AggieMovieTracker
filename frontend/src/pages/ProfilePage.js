@@ -1,48 +1,40 @@
 import React, { useEffect, useState } from 'react'
-import { Button, Input, Spinner } from 'reactstrap';
-import { getUserInfo } from '../Utilities';
+import { Spinner } from 'reactstrap';
 
 export default function ProfilePage() {
-  const [searchInput, setSearchInput] = useState("John Doe");
-  const [userName, setUserName] = useState("Name")
-  const [userAge, setUserAge] = useState("Age");
-  const [userFavMovie, setFavMovie] = useState("Favorite Movie");
-  const [userNumMovies, setNumMovies] = useState("Number of Movies Watched");
-  const [isLoading, setIsLoading] = useState(false);
+  const [userName, setUserName] = useState("");
+  const [userFavMovie, setFavMovie] = useState("");
+  const [userNumMovies, setNumMovies] = useState("");
+  const [isLoading] = useState(false);
 
-  async function onSearchButtonClick() {
-    setIsLoading(true);
-    let results = await getUserInfo(searchInput);
-    setIsLoading(false);
-
-    setUserName(results.user_name);
-    setUserAge(results.age);
-    setFavMovie(results.favMovie);
-    setNumMovies(results.numMovies);
-
-
-    console.log(userName);
+  async function getProfile() {
+    const item = localStorage.getItem("userInfo");
+    const userInfo = JSON.parse(item);
+    setUserName(userInfo.user_name);
+    if (userInfo.favMovie == null) {
+      setFavMovie("None");
+    } else {
+      setFavMovie(userInfo.favMovie);
+    }
+    setNumMovies(userInfo.numMovies);
   }
   
 
+  useEffect(() => {
+    getProfile();
+  }, [])
+
     return (
       <div>
-  
-        <Button onClick={onSearchButtonClick}>Dummy Button for user John Doe!</Button>
-
         <br/>
         {isLoading &&
         <Spinner></Spinner>}
         <br/>
 
-        <p>{userName}</p>
-        <p>{userAge}</p>
-        <p>{userFavMovie}</p>
-        <p>{userNumMovies}</p>
+        <p>Username: {userName}</p>
+        <p>Favorite Movie: {userFavMovie}</p>
+        <p>Number of Movies Watched: {userNumMovies}</p>
         
       </div>
-    )
-  
-
-  
+    )  
 }
