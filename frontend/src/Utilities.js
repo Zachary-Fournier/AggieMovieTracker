@@ -56,6 +56,15 @@ export async function getUserPosts(userName) {
     return data;
 }
 
+// Get all posts using the get route from backend (app.py)
+export async function getAllPosts() {
+    let data = fetch(`${url}/get-all-posts/`)
+        .then(response => response.json())
+        .then(result => result)
+
+    return data;
+}
+
 // Get movie info using the get route from backend (app.py)
 export async function getMovieInfo(movieID) {
     let movieInfo = fetch(`${url}/get-movie-info/${movieID}`)

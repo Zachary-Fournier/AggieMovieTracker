@@ -192,6 +192,21 @@ def get_user_posts(userId):
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
     return {"posts": data}
 
+cur.execute("select * from posts;")
+data = cur.fetchall()
+print(data)
+
+# GET ALL OF THE POSTS FOR ALL USERS
+@app.route("/get-all-posts/")
+@cross_origin()
+def get_posts():
+    # First find the user id with userName
+    cur.execute("select * from posts;")
+    data = cur.fetchall()
+    print(data)
+
+    # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
+    return {"posts": data}
 
 
 # GET MOVIE INFORMATION WITH MOVIE ID
