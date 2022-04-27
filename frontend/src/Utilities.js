@@ -108,7 +108,7 @@ export async function addRating(userID, movieID, num_stars) {
 
 // Adding a movie for user wathchlist through post route from backend (app.js)
 export async function addToWatchlist(userID, movieID) {
-    let res = fetch(`${url}/add-to-watchlist/${userID}/${movieID}}`)
+    let res = fetch(`${url}/add-to-watchlist/${userID}/${movieID}`)
         .then(response => response.json())
         .then(result => result)
 
@@ -118,7 +118,7 @@ export async function addToWatchlist(userID, movieID) {
 
 // Updating a user through update route from backend (app.js)
 export async function updateFavoriteMovie(userID, movieID) {
-    let res = fetch(`${url}/update-favorite-movie/${userID}/${movieID}}`)
+    let res = fetch(`${url}/update-favorite-movie/${userID}/${movieID}`)
         .then(response => response.json())
         .then(result => result)
 
@@ -128,7 +128,7 @@ export async function updateFavoriteMovie(userID, movieID) {
 
 // Adding a user post through post route from backend (app.js)
 export async function addPost(userID, postDecription) {
-    let res = fetch(`${url}/add-post/${userID}/${postDecription}}`)
+    let res = fetch(`${url}/add-post/${userID}/${postDecription}`)
         .then(response => response.json())
         .then(result => result)
 
