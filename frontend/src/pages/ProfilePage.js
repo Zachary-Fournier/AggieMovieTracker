@@ -11,13 +11,10 @@ export default function ProfilePage() {
   const [isLoading, setIsLoading] = useState(false);
 
   async function onSearchButtonClick() {
-    console.log("RAN");
     setIsLoading(true);
     let results = await getUserInfo(searchInput);
     setIsLoading(false);
 
-
-    
     setUserName(results.user_name);
     setUserAge(results.age);
     setFavMovie(results.favMovie);
@@ -26,6 +23,7 @@ export default function ProfilePage() {
 
     console.log(userName);
   }
+  
 
     return (
       <div>

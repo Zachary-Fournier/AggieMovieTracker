@@ -13,7 +13,6 @@ export default function RegisterPage() {
         setIsAccountCreated(false);
         setDidAccountCreationFail(false);
         let result = await addUser(userName, password);
-        console.log('result', result);
         if(result.response === 'Success') {
             setIsAccountCreated(true);
         } else {
