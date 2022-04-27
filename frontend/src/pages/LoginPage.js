@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Form, FormGroup, Label, Input, Button, Alert } from 'reactstrap';
-import { getUserPass } from '../Utilities';
+import { getUserInfo, getUserPass } from '../Utilities';
 
 export default function LoginPage() {
 
@@ -14,14 +14,19 @@ export default function LoginPage() {
         navigate('/register');
     }
     
-    // loginUser was written by Mark Treviño
     /**
      * this function will check if the password given on the 
      * login page is accurate for the given username
+     * written by Mark Treviño
      */
     async function loginUser() {
         let result = await getUserPass(userName);
         if(result.password[0][0] == password) {
+            // put user info into local storage
+            let userInfo = await getUserInfo(userName);
+
+            localStorage.setItem('userInfo', JSON.stringify(userInfo));
+            
             navigate('/profile');
         } else {
             setIsValidPassword(false)
@@ -63,7 +68,7 @@ export default function LoginPage() {
                </Button>
            </Form>
            {!isValidPassword && 
-            <Alert color='emergency'>Please enter in a valid password!</Alert>
+            <Alert color='danger'>Please enter in a valid username/password combination!</Alert>
            }
         </div>
     )

@@ -7,14 +7,17 @@ export default function RegisterPage() {
     const [userName, setUserName] = useState();
     const [password, setPassword] = useState();
     const [isAccountCreated, setIsAccountCreated] = useState(false);
+    const [didAccountCreationFail, setDidAccountCreationFail] = useState(false);
 
     async function registerUser() {
-        // let result = await addUser(userName, password);
-        // if(result.response === 'Success') {
-        //     setIsAccountCreated(true);
-        // } else {
-        //     setIsAccountCreated(false);
-        // }
+        setIsAccountCreated(false);
+        setDidAccountCreationFail(false);
+        let result = await addUser(userName, password);
+        if(result.response === 'Success') {
+            setIsAccountCreated(true);
+        } else {
+            setDidAccountCreationFail(true);
+        }
     }
 
     return (
@@ -30,7 +33,11 @@ export default function RegisterPage() {
                             <Input
                                 placeholder='Enter username'
                                 value={userName}
-                                onChange={(e) => {setUserName(e.target.value);}}
+                                onChange={(e) => {
+                                    setUserName(e.target.value);
+                                    setDidAccountCreationFail(false);
+                                    setIsAccountCreated(false);
+                                }}
                             />
                         </FormGroup>
                     </Col>
@@ -43,7 +50,11 @@ export default function RegisterPage() {
                                 placeholder='Enter password'
                                 type='password'
                                 value={password}
-                                onChange={(e) => {setPassword(e.target.value);}}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    setDidAccountCreationFail(false);
+                                    setIsAccountCreated(false);
+                                }}
                             />
                         </FormGroup>
                     </Col>
@@ -52,10 +63,11 @@ export default function RegisterPage() {
                    Register
                </Button>
             </Form>
-            {isAccountCreated ?
+            {isAccountCreated &&
                 <Alert>Account '{userName}' was created successfully! <a href="/login">Click here to login!</a></Alert>
-                :
-                <Alert color='emergency'>There was an error registering</Alert>
+            }
+            {didAccountCreationFail &&
+                <Alert color='danger'>There was an error registering, please try again!</Alert>
             }
         </div>
     )

@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom';
 import { Navbar, NavbarBrand, NavItem, NavLink, Nav } from 'reactstrap';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
@@ -11,6 +11,19 @@ import NewsFeedPage from './pages/NewsFeedPage';
 
 function App() {
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  /**
+   * check to see if user is logged in, if it is, then show profile page
+   */
+  useEffect(() => {
+    if(localStorage.getItem('userInfo')) {
+      setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
+    }
+    console.log(isLoggedIn)
+  }, [localStorage.getItem('userInfo')]);
+
   return (
     <div className="App">
       <HashRouter basename="/">
@@ -20,24 +33,36 @@ function App() {
           </NavbarBrand>
           <Nav className="me-auto"
           navbar>
-            <NavItem>
-              <NavLink href="/#/profile">Profile</NavLink>
-            </NavItem>
+            {isLoggedIn ?
+            <>
+              <NavItem>
+                <NavLink href="/#/profile">Profile</NavLink>
+              </NavItem>
+              <NavItem>
+                <NavLink href="/#/newsfeed">News Feed</NavLink>
+              </NavItem>
+            </>
+            :
             <NavItem>
               <NavLink href="/#/login">Login</NavLink>
             </NavItem>
-            <NavItem>
-              <NavLink href="/#/newsfeed">News Feed</NavLink>
-            </NavItem>
+            }
           </Nav>
         </Navbar>
         <Routes>
           <Route exact path="/" element={<HomePage />}/>
-          <Route path="/profile" element={<ProfilePage />}/>
-          <Route path="/login" element={<LoginPage />}/>
-          <Route path="/register" element={<RegisterPage />}/>
-          <Route path="/newsfeed" element={<NewsFeedPage />}/>
-          <Route path={`/movie/:movieID`} element={<MoviePage />} />
+          {isLoggedIn ? 
+            <>
+              <Route path="/newsfeed" element={<NewsFeedPage />}/>
+              <Route path={`/movie/:movieID`} element={<MoviePage />} />
+              <Route path="/profile" element={<ProfilePage />}/>
+            </>
+          :
+            <>
+              <Route path="/login" element={<LoginPage />}/>
+              <Route path="/register" element={<RegisterPage />}/>
+            </>
+          }
         </Routes>
       </HashRouter>
     </div>
