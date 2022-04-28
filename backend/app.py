@@ -189,6 +189,17 @@ def get_user_posts(userId):
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
     return {"posts": data}
 
+# GET ALL OF THE POSTS FOR ALL USERS
+@app.route("/get-all-posts/")
+@cross_origin()
+def get_posts():
+    # First find the user id with userName
+    cur.execute("select * from posts;")
+    data = cur.fetchall()
+    print(data)
+
+    # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
+    return {"posts": data}
 
 
 # GET MOVIE INFORMATION WITH MOVIE ID
@@ -258,6 +269,21 @@ def add_rating(userID, movieID, numStars):
         data = "Failure"
     return {"response": data}
 
+
+# MAKE THE USER ADMIN TO GIVE ADMIN PRIVILEGES
+@app.route("/make-admin/<string:userID>")
+@cross_origin()
+def make_admin(userID):
+    try:
+        userID = str(userID)
+        sqlStmt = "UPDATE users SET is_admin = true WHERE user_id = {}".format(userID)
+        cur.execute(sqlStmt)
+        conn.commit()
+        data = "Success"
+    except:
+        data = "Failure"
+    return {"response": data}
+
 # UserID, movie -> Add to movie watchlist
 @app.route("/add-to-watchlist/<string:userID>/<string:movieID>")
 @cross_origin()
@@ -274,7 +300,6 @@ def add_to_watchlist(userID, movieID):
     return {"response": data}
 
 
-
 # Update favorite movie, userID as input, movieID as input
 @app.route("/update-favorite-movie/<string:userID>/<string:movieID>")
 @cross_origin()
@@ -286,19 +311,52 @@ def update_favorite_movie(userID, movieID):
         sqlStmt = "UPDATE users SET favorite_movie = '{}' WHERE user_id = {};".format(movieName, userID)
         cur.execute(sqlStmt)
         conn.commit()
-        
         data = "Success"
     except:
         data = "Failure"
+
     return {"response": data}
+
+userID = 1
+movieID = 'tt2501692'
+userID = str(userID)
+sqlStmt = "DELETE FROM watchlist WHERE user_id = '{}' and movie_id = '{}';".format(userID, movieID)
+cur.execute(sqlStmt)
+conn.commit()
+
+# Update favorite movie, userID as input, movieID as input
+@app.route("/delete-movie-from-watchlist/<string:userID>/<string:movieID>")
+@cross_origin()
+def delete_from_watchlist(userID, movieID):
+    try:
+        # First get the movie name from the movieID
+        userID = str(userID)
+        sqlStmt = "DELETE FROM watchlist WHERE user_id = '{}' and movie_id = '{}';".format(userID, movieID)
+        cur.execute(sqlStmt)
+        conn.commit()
+        data = "Success"
+    except:
+        data = "Failure"
+
+    return {"response": data}
+
 
 # Create a post for userID
 @app.route("/add-post/<string:userID>/<string:postDescription>")
 @cross_origin()
 def add_post(userID, postDescription):
     try:
-        # First get the movie name from the movieID
+    
+        # First check if user is admin
         userID = str(userID)
+        sqlStmt = "select is_admin from users where user_id = {};".format(userID)
+        cur.execute(sqlStmt)
+        is_admin = cur.fetchone()[0]
+        if is_admin == False:
+            print("Not admin")
+            data = "Failure"
+            return {"response": data}
+        
         sqlStmt = "INSERT INTO posts (user_id, post_description) VALUES ('{}', '{}');".format(userID, postDescription)
         cur.execute(sqlStmt)
         conn.commit()

@@ -25,8 +25,7 @@ function App() {
     } else {
       setIsLoggedIn(false);
     }
-    console.log(isLoggedIn)
-  }, [localStorage.getItem('userInfo')]);
+  }, []);
 
   /**
    * checks if user is logged in, if they are, it logs them out

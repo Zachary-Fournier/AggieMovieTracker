@@ -56,6 +56,15 @@ export async function getUserPosts(userName) {
     return data;
 }
 
+// Get all posts using the get route from backend (app.py)
+export async function getAllPosts() {
+    let data = fetch(`${url}/get-all-posts/`)
+        .then(response => response.json())
+        .then(result => result)
+
+    return data;
+}
+
 // Get movie info using the get route from backend (app.py)
 export async function getMovieInfo(movieID) {
     let movieInfo = fetch(`${url}/get-movie-info/${movieID}`)
@@ -108,7 +117,7 @@ export async function addRating(userID, movieID, num_stars) {
 
 // Adding a movie for user wathchlist through post route from backend (app.js)
 export async function addToWatchlist(userID, movieID) {
-    let res = fetch(`${url}/add-to-watchlist/${userID}/${movieID}}`)
+    let res = fetch(`${url}/add-to-watchlist/${userID}/${movieID}`)
         .then(response => response.json())
         .then(result => result)
 
@@ -116,9 +125,29 @@ export async function addToWatchlist(userID, movieID) {
     return res;
 }
 
-// Updating a user through update route from backend (app.js)
+// Delte a movie for user wathchlist through delete route from backend (app.js)
+export async function deleteFromWatchlist(userID, movieID) {
+    let res = fetch(`${url}/delete-movie-from-watchlist/${userID}/${movieID}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    // Res will return "Success" or "Failure" inside of response key
+    return res;
+}
+
+// Updating a user TO ADMIN through update route from backend (app.js)
+export async function makeAdmin(userID) {
+    let res = fetch(`${url}/make-admin/${userID}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    // Res will return "Success" or "Failure" inside of response key
+    return res;
+}
+
+// Updating a user's favorite movie through update route from backend (app.js)
 export async function updateFavoriteMovie(userID, movieID) {
-    let res = fetch(`${url}/update-favorite-movie/${userID}/${movieID}}`)
+    let res = fetch(`${url}/update-favorite-movie/${userID}/${movieID}`)
         .then(response => response.json())
         .then(result => result)
 
@@ -128,7 +157,7 @@ export async function updateFavoriteMovie(userID, movieID) {
 
 // Adding a user post through post route from backend (app.js)
 export async function addPost(userID, postDecription) {
-    let res = fetch(`${url}/add-post/${userID}/${postDecription}}`)
+    let res = fetch(`${url}/add-post/${userID}/${postDecription}`)
         .then(response => response.json())
         .then(result => result)
 
