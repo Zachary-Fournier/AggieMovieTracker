@@ -75,11 +75,6 @@ conn = psycopg2.connect(
     password="postgres")
 cur = conn.cursor()
 
-movieName = "Thor"
-cur.execute("SELECT tconst FROM moviesreal WHERE UPPER(moviesreal.primarytitle) = UPPER(%s);", (movieName, ))
-movies = cur.fetchall()
-print(movies[0][0])
-
 # HELPER FUNCTIONS. WE CAN CONVERT ID TO USERNAME OR MOVIE NAME TO ID
 def getUserIdFromUserName(cur, userName):
     cur.execute("select user_id from users where user_name = (%s);", (userName,))
@@ -100,9 +95,7 @@ def getMovieIdFromMovieName(cur, movieName):
     cur.execute("SELECT tconst FROM moviesreal WHERE UPPER(moviesreal.primarytitle) = UPPER(%s);", (movieName, ))
     movies = cur.fetchall()
     return movies[0][0]
-
-
-
+    
 # GET USER INFORMATION WITH USERNAME, LATER WE WILL ADD A FUNCTION THAT GETS THE USER ID BASED ON THE USERNAME AND PASSWORD (LOGIN)
 @app.route("/get-user-info/<string:userName>")
 @cross_origin()

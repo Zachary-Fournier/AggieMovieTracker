@@ -7,6 +7,10 @@ export default function ProfilePage() {
   const [userNumMovies, setNumMovies] = useState("");
   const [isLoading] = useState(false);
 
+  /**
+   * function gets user info from local storage and sets it to respective variables
+   * written by Jash Choksi
+   */
   async function getProfile() {
     const item = localStorage.getItem("userInfo");
     const userInfo = JSON.parse(item);
@@ -19,7 +23,9 @@ export default function ProfilePage() {
     setNumMovies(userInfo.numMovies);
   }
   
-
+  /**
+   * updates and displays user info on profile page after render
+   */
   useEffect(() => {
     getProfile();
   }, [])
@@ -31,9 +37,9 @@ export default function ProfilePage() {
         <Spinner></Spinner>}
         <br/>
 
-        <p>Username: {userName}</p>
-        <p>Favorite Movie: {userFavMovie}</p>
-        <p>Number of Movies Watched: {userNumMovies}</p>
+        <p><b>Username:</b> {userName}</p>
+        <p><b>Favorite Movie:</b> {userFavMovie}</p>
+        <p><b>Number of Movies Watched:</b> {userNumMovies}</p>
         
       </div>
     )  

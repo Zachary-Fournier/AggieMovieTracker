@@ -30,11 +30,11 @@ export default function MoviePage() {
                     <a href={`https://www.imdb.com/title/${movieInfo[0]}/`} target='_blank' rel="noreferrer">
                     {movieInfo[2]}
                     </a>
-                    <p>movie title: {movieInfo[2]}</p> <br/>
-                    <p>genre name: {movieInfo[8]}</p> <br/>
-                    <p>movie duration: {movieInfo[7]} mins</p> <br/>
-                    <p>release date: {movieInfo[5]}</p> <br/>
-                    <p>avg rating</p> <br/>
+                    <p><b>Movie Title:</b> {movieInfo[2]}</p> <br/>
+                    <p><b>Genres:</b> {movieInfo[8]}</p> <br/>
+                    <p><b>Duration:</b> {movieInfo[7]} mins</p> <br/>
+                    <p><b>Release Date:</b> {movieInfo[5]}</p> <br/>
+                    <p><b>Average Rating:</b> </p> <br/>
                     <img src={moviePosterURL} style={{width: "25%", height: "50%"}}>
                     </img>
                     <Button onClick={rateMovie()}>Leave a Rating!</Button>
