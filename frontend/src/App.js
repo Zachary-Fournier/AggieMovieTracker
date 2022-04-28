@@ -55,9 +55,6 @@ function App() {
               <NavItem>
                 <NavLink href="/#/newsfeed">News Feed</NavLink>
               </NavItem>
-              <NavItem>
-                <NavLink href="/#/newsfeed">News Feed</NavLink>
-              </NavItem>
               <NavbarText>
                 Logged in as <b>{userName}</b>
               </NavbarText>

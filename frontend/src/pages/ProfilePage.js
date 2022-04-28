@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Spinner } from 'reactstrap';
+import { getMoviePoster } from '../Utilities';
 
 export default function ProfilePage() {
   const [userName, setUserName] = useState("");
   const [userFavMovie, setFavMovie] = useState("");
   const [userNumMovies, setNumMovies] = useState("");
+  const [moviePosterURL, setMoviePosterURL] = useState();
   const [isLoading] = useState(false);
 
   /**
@@ -18,11 +20,13 @@ export default function ProfilePage() {
     if (userInfo.favMovie == null) {
       setFavMovie("None");
     } else {
-      setFavMovie(userInfo.favMovie);
+      setFavMovie(userInfo.favMovie[2]);
+      let result = await getMoviePoster(userInfo.favMovie[0]);
+      setMoviePosterURL(`http://image.tmdb.org/t/p/original${result.movie_results[0].poster_path}`)
     }
     setNumMovies(userInfo.numMovies);
   }
-  
+
   /**
    * updates and displays user info on profile page after render
    */
@@ -38,8 +42,9 @@ export default function ProfilePage() {
         <br/>
 
         <p><b>Username:</b> {userName}</p>
-        <p><b>Favorite Movie:</b> {userFavMovie}</p>
         <p><b>Number of Movies Watched:</b> {userNumMovies}</p>
+        <p><b>Favorite Movie:</b> {userFavMovie}</p>
+        <img src={moviePosterURL} style={{width: "25%", height: "50%"}}></img>
         
       </div>
     )  
