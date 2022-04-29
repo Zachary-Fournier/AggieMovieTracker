@@ -293,20 +293,28 @@ def make_admin(userID):
         data = "Failure"
     return {"response": data}
 
+
 # UserID, movie -> Add to movie watchlist
 @app.route("/add-to-watchlist/<string:userID>/<string:movieID>")
 @cross_origin()
 def add_to_watchlist(userID, movieID):
     try:
         userID = str(userID)
-        sqlStmt = "INSERT INTO watchlist (user_id, movie_id) VALUES ('{}', '{}');".format(userID, movieID)
+        # First, check for duplicates with that userID and movieID
+        sqlStmt = "select * from watchlist where user_id = '{}' and movie_id = '{}';".format(userID, movieID)
         cur.execute(sqlStmt)
-        conn.commit()
+        data = cur.fetchall()
+        if len(data) == 0:
+            sqlStmt = "INSERT INTO watchlist (user_id, movie_id) VALUES ('{}', '{}');".format(userID, movieID)
+            cur.execute(sqlStmt)
+            conn.commit()
         
-        data = "Success"
+            res = "Success"
+        else:
+            res = "Failure, duplicate detected"
     except:
-        data = "Failure"
-    return {"response": data}
+        res = "Failure"
+    return {"response": res}
 
 
 # Update favorite movie, userID as input, movieID as input
@@ -325,13 +333,6 @@ def update_favorite_movie(userID, movieID):
         data = "Failure"
 
     return {"response": data}
-
-userID = 1
-movieID = 'tt2501692'
-userID = str(userID)
-sqlStmt = "DELETE FROM watchlist WHERE user_id = '{}' and movie_id = '{}';".format(userID, movieID)
-cur.execute(sqlStmt)
-conn.commit()
 
 # Update favorite movie, userID as input, movieID as input
 @app.route("/delete-movie-from-watchlist/<string:userID>/<string:movieID>")
