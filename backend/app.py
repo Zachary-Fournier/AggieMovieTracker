@@ -75,7 +75,6 @@ conn = psycopg2.connect(
     password="postgres")
 cur = conn.cursor()
 
-
 # HELPER FUNCTIONS. WE CAN CONVERT ID TO USERNAME OR MOVIE NAME TO ID
 def getUserIdFromUserName(cur, userName):
     cur.execute("select user_id from users where user_name = (%s);", (userName,))
@@ -96,9 +95,7 @@ def getMovieIdFromMovieName(cur, movieName):
     cur.execute("SELECT tconst FROM moviesreal WHERE UPPER(moviesreal.primarytitle) = UPPER(%s);", (movieName, ))
     movies = cur.fetchall()
     return movies[0][0]
-
-
-
+    
 # GET USER INFORMATION WITH USERNAME, LATER WE WILL ADD A FUNCTION THAT GETS THE USER ID BASED ON THE USERNAME AND PASSWORD (LOGIN)
 @app.route("/get-user-info/<string:userName>")
 @cross_origin()
@@ -192,6 +189,17 @@ def get_user_posts(userId):
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
     return {"posts": data}
 
+# GET ALL OF THE POSTS FOR ALL USERS
+@app.route("/get-all-posts/")
+@cross_origin()
+def get_posts():
+    # First find the user id with userName
+    cur.execute("select * from posts;")
+    data = cur.fetchall()
+    print(data)
+
+    # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
+    return {"posts": data}
 
 
 # GET MOVIE INFORMATION WITH MOVIE ID
@@ -301,6 +309,29 @@ def update_favorite_movie(userID, movieID):
         userID = str(userID)
         movieName = getMovieNameFromMovieId(cur, movieID)
         sqlStmt = "UPDATE users SET favorite_movie = '{}' WHERE user_id = {};".format(movieName, userID)
+        cur.execute(sqlStmt)
+        conn.commit()
+        data = "Success"
+    except:
+        data = "Failure"
+
+    return {"response": data}
+
+userID = 1
+movieID = 'tt2501692'
+userID = str(userID)
+sqlStmt = "DELETE FROM watchlist WHERE user_id = '{}' and movie_id = '{}';".format(userID, movieID)
+cur.execute(sqlStmt)
+conn.commit()
+
+# Update favorite movie, userID as input, movieID as input
+@app.route("/delete-movie-from-watchlist/<string:userID>/<string:movieID>")
+@cross_origin()
+def delete_from_watchlist(userID, movieID):
+    try:
+        # First get the movie name from the movieID
+        userID = str(userID)
+        sqlStmt = "DELETE FROM watchlist WHERE user_id = '{}' and movie_id = '{}';".format(userID, movieID)
         cur.execute(sqlStmt)
         conn.commit()
         data = "Success"

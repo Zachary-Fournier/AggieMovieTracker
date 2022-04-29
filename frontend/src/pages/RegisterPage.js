@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Form, FormGroup, Label, Input, Row, Col, Button, Alert } from 'reactstrap';
 import { addUser } from '../Utilities';
 
+/**
+ * basic layout of registration page written by Jash Choksi
+ */
 export default function RegisterPage() {
 
     const [userName, setUserName] = useState();

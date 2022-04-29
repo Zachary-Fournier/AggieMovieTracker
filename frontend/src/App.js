@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
 import { HashRouter, Route, Routes, useNavigate } from 'react-router-dom';
-import { Navbar, NavbarBrand, NavItem, NavLink, Nav } from 'reactstrap';
+import { Navbar, NavbarBrand, NavItem, NavLink, Nav, Button, NavbarText } from 'reactstrap';
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
 import ProfilePage from './pages/ProfilePage';
@@ -12,17 +12,32 @@ import NewsFeedPage from './pages/NewsFeedPage';
 function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [userName, setUserName] = useState("");
   /**
    * check to see if user is logged in, if it is, then show profile page
    */
   useEffect(() => {
     if(localStorage.getItem('userInfo')) {
       setIsLoggedIn(true);
+      const item = localStorage.getItem('userInfo');
+      const userInfo = JSON.parse(item);
+      setUserName(userInfo.user_name);
     } else {
       setIsLoggedIn(false);
     }
   }, []);
 
+  /**
+   * checks if user is logged in, if they are, it logs them out
+   */
+  async function logOut() {
+    if (isLoggedIn) {
+      window.localStorage.clear();
+      setIsLoggedIn(false);
+      window.location.reload();
+    }
+  }
+  
   return (
     <div className="App">
       <HashRouter basename="/">
@@ -39,6 +54,12 @@ function App() {
               </NavItem>
               <NavItem>
                 <NavLink href="/#/newsfeed">News Feed</NavLink>
+              </NavItem>
+              <NavbarText>
+                Logged in as <b>{userName}</b>
+              </NavbarText>
+              <NavItem>
+                <NavLink onClick={logOut}>Log out</NavLink>
               </NavItem>
             </>
             :
