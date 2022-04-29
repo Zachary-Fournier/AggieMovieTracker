@@ -3,12 +3,20 @@ import { useNavigate } from 'react-router-dom';
 import { Form, FormGroup, Label, Input, Button, Alert } from 'reactstrap';
 import { getUserInfo, getUserPass } from '../Utilities';
 
+/** 
+* basic layout of login page written by Jash Choksi 
+*/
 export default function LoginPage() {
 
     const [userName, setUserName] = useState("");
     const [password, setPassword] = useState("");
 
     const [isValidPassword, setIsValidPassword] = useState(true);
+    /**
+     * creates a route to the registration page
+     * is invoked when the user clicks the register button
+     * written by Jash Choksi
+     */
     let navigate = useNavigate(); 
     const registerRoute = () => {
         navigate('/register');
