@@ -189,6 +189,19 @@ def get_user_posts(userId):
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
     return {"posts": data}
 
+
+@app.route("/get-user-posts-id/<string:userId>")
+@cross_origin()
+def get_user_posts_id(userId):
+    userId = str(userId)
+    # First find the user id with userName
+    cur.execute("select post_id from posts where user_id = (%s);", (userId,))
+    data = cur.fetchall()
+    print(data)
+
+    # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
+    return {"posts": data}
+
 # GET ALL OF THE POSTS FOR ALL USERS
 @app.route("/get-all-posts/")
 @cross_origin()
@@ -334,7 +347,7 @@ def update_favorite_movie(userID, movieID):
 
     return {"response": data}
 
-# Update favorite movie, userID as input, movieID as input
+# Delete favorite movie, userID as input, movieID as input
 @app.route("/delete-movie-from-watchlist/<string:userID>/<string:movieID>")
 @cross_origin()
 def delete_from_watchlist(userID, movieID):
@@ -349,6 +362,25 @@ def delete_from_watchlist(userID, movieID):
         data = "Failure"
 
     return {"response": data}
+
+
+
+# Delete from Posts
+@app.route("/delete-post/<string:postID>")
+@cross_origin()
+def delete_post(postID):
+    try:
+        # First get the movie name from the movieID
+        postID = str(postID)
+        sqlStmt = "DELETE FROM posts WHERE post_id = '{}';".format(postID)
+        cur.execute(sqlStmt)
+        conn.commit()
+        data = "Success"
+    except:
+        data = "Failure"
+
+    return {"response": data}
+
 
 
 # Create a post for userID
