@@ -242,12 +242,13 @@ def add_user(userName, userPassword):
             sqlStmt = "INSERT INTO users (user_name, num_movies_watched, password, is_admin) VALUES ('{}', 0, '{}', false);".format(userName, userPassword)
             cur.execute(sqlStmt)
             conn.commit()
-            data = "Success"
+            res = "Success"
         else:
-            data = "Failure"
+            res = "Failure, duplicate detected"
     except:
-        data = "Failure"
-    return {"response": data}
+        res = "Failure"
+    return {"response": res}
+
 
 # user Id, movie Id, and rating as input -> Add movie review into database (POST)
 # Need to do two things: Add to rating table and add to users table (adding to num_movies_watched)
@@ -257,20 +258,28 @@ def add_user(userName, userPassword):
 def add_rating(userID, movieID, numStars):
     try:
         userID = str(userID)
-        sqlStmt = "INSERT INTO rating (movie_id, user_id, num_stars) VALUES ('{}', '{}', {});".format(movieID, userID, numStars)
+        # First, check for duplicates with that userID and movieID
+        sqlStmt = "select * from rating where user_id = '{}' and movie_id = '{}';".format(userID, movieID)
         cur.execute(sqlStmt)
-        conn.commit()
-        # Increase by one in num movies for specific user id
-        # First find the num_movies in users table and then use an update for the sql command
-        cur.execute("select num_movies_watched from users where user_id = {};".format(int(userID)))
-        numMovies = cur.fetchone()[0]
-        sqlStmt = "UPDATE users SET num_movies_watched = '{}' WHERE user_id = {};".format(str(numMovies), userID)
-        cur.execute(sqlStmt)
-        conn.commit()
-        data = "Success"
+        data = cur.fetchall()
+        if len(data) == 0:
+
+            sqlStmt = "INSERT INTO rating (movie_id, user_id, num_stars) VALUES ('{}', '{}', {});".format(movieID, userID, numStars)
+            cur.execute(sqlStmt)
+            conn.commit()
+            # Increase by one in num movies for specific user id
+            # First find the num_movies in users table and then use an update for the sql command
+            cur.execute("select num_movies_watched from users where user_id = {};".format(int(userID)))
+            numMovies = cur.fetchone()[0]
+            sqlStmt = "UPDATE users SET num_movies_watched = '{}' WHERE user_id = {};".format(str(numMovies), userID)
+            cur.execute(sqlStmt)
+            conn.commit()
+            res = "Success"
+        else:
+            res = "Failure, duplicate detected"
     except:
-        data = "Failure"
-    return {"response": data}
+        res = "Failure"
+    return {"response": res}
 
 
 # MAKE THE USER ADMIN TO GIVE ADMIN PRIVILEGES
