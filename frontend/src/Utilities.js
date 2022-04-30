@@ -56,6 +56,26 @@ export async function getUserPosts(userName) {
     return data;
 }
 
+// Get users' post IDs which will allow for deleting the posts later on (they will be in same order as getUserPosts)
+export async function getUserPostsID(userName) {
+    let data = fetch(`${url}/get-user-posts-id/${userName}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    return data;
+}
+
+// Delete post based on post ID
+export async function deletePost(postID) {
+    // If there is an error, it might mean that postID has to be a string
+
+    let data = fetch(`${url}/delete-post/${postID}`)
+        .then(response => response.json())
+        .then(result => result)
+
+    return data;
+}
+
 // Get all posts using the get route from backend (app.py)
 export async function getAllPosts() {
     let data = fetch(`${url}/get-all-posts/`)
@@ -125,8 +145,9 @@ export async function addToWatchlist(userID, movieID) {
     return res;
 }
 
-// Delte a movie for user wathchlist through delete route from backend (app.js)
+// Delete a movie for user wathchlist through delete route from backend (app.js)
 export async function deleteFromWatchlist(userID, movieID) {
+    // If there is an error, it might mean that userId or movieId has to be a string
     let res = fetch(`${url}/delete-movie-from-watchlist/${userID}/${movieID}`)
         .then(response => response.json())
         .then(result => result)
@@ -134,6 +155,9 @@ export async function deleteFromWatchlist(userID, movieID) {
     // Res will return "Success" or "Failure" inside of response key
     return res;
 }
+
+// Delete a post done by certain user and post id
+
 
 // Updating a user TO ADMIN through update route from backend (app.js)
 export async function makeAdmin(userID) {

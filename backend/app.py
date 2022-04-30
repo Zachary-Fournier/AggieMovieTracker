@@ -189,6 +189,19 @@ def get_user_posts(userId):
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
     return {"posts": data}
 
+
+@app.route("/get-user-posts-id/<string:userId>")
+@cross_origin()
+def get_user_posts_id(userId):
+    userId = str(userId)
+    # First find the user id with userName
+    cur.execute("select post_id from posts where user_id = (%s);", (userId,))
+    data = cur.fetchall()
+    print(data)
+
+    # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
+    return {"posts": data}
+
 # GET ALL OF THE POSTS FOR ALL USERS
 @app.route("/get-all-posts/")
 @cross_origin()
@@ -239,12 +252,13 @@ def add_user(userName, userPassword):
             sqlStmt = "INSERT INTO users (user_name, num_movies_watched, password, is_admin) VALUES ('{}', 0, '{}', false);".format(userName, userPassword)
             cur.execute(sqlStmt)
             conn.commit()
-            data = "Success"
+            res = "Success"
         else:
-            data = "Failure"
+            res = "Failure, duplicate detected"
     except:
-        data = "Failure"
-    return {"response": data}
+        res = "Failure"
+    return {"response": res}
+
 
 # user Id, movie Id, and rating as input -> Add movie review into database (POST)
 # Need to do two things: Add to rating table and add to users table (adding to num_movies_watched)
@@ -254,20 +268,28 @@ def add_user(userName, userPassword):
 def add_rating(userID, movieID, numStars):
     try:
         userID = str(userID)
-        sqlStmt = "INSERT INTO rating (movie_id, user_id, num_stars) VALUES ('{}', '{}', {});".format(movieID, userID, numStars)
+        # First, check for duplicates with that userID and movieID
+        sqlStmt = "select * from rating where user_id = '{}' and movie_id = '{}';".format(userID, movieID)
         cur.execute(sqlStmt)
-        conn.commit()
-        # Increase by one in num movies for specific user id
-        # First find the num_movies in users table and then use an update for the sql command
-        cur.execute("select num_movies_watched from users where user_id = {};".format(int(userID)))
-        numMovies = cur.fetchone()[0]
-        sqlStmt = "UPDATE users SET num_movies_watched = '{}' WHERE user_id = {};".format(str(numMovies), userID)
-        cur.execute(sqlStmt)
-        conn.commit()
-        data = "Success"
+        data = cur.fetchall()
+        if len(data) == 0:
+
+            sqlStmt = "INSERT INTO rating (movie_id, user_id, num_stars) VALUES ('{}', '{}', {});".format(movieID, userID, numStars)
+            cur.execute(sqlStmt)
+            conn.commit()
+            # Increase by one in num movies for specific user id
+            # First find the num_movies in users table and then use an update for the sql command
+            cur.execute("select num_movies_watched from users where user_id = {};".format(int(userID)))
+            numMovies = cur.fetchone()[0]
+            sqlStmt = "UPDATE users SET num_movies_watched = '{}' WHERE user_id = {};".format(str(numMovies), userID)
+            cur.execute(sqlStmt)
+            conn.commit()
+            res = "Success"
+        else:
+            res = "Failure, duplicate detected"
     except:
-        data = "Failure"
-    return {"response": data}
+        res = "Failure"
+    return {"response": res}
 
 
 # MAKE THE USER ADMIN TO GIVE ADMIN PRIVILEGES
@@ -284,20 +306,28 @@ def make_admin(userID):
         data = "Failure"
     return {"response": data}
 
+
 # UserID, movie -> Add to movie watchlist
 @app.route("/add-to-watchlist/<string:userID>/<string:movieID>")
 @cross_origin()
 def add_to_watchlist(userID, movieID):
     try:
         userID = str(userID)
-        sqlStmt = "INSERT INTO watchlist (user_id, movie_id) VALUES ('{}', '{}');".format(userID, movieID)
+        # First, check for duplicates with that userID and movieID
+        sqlStmt = "select * from watchlist where user_id = '{}' and movie_id = '{}';".format(userID, movieID)
         cur.execute(sqlStmt)
-        conn.commit()
+        data = cur.fetchall()
+        if len(data) == 0:
+            sqlStmt = "INSERT INTO watchlist (user_id, movie_id) VALUES ('{}', '{}');".format(userID, movieID)
+            cur.execute(sqlStmt)
+            conn.commit()
         
-        data = "Success"
+            res = "Success"
+        else:
+            res = "Failure, duplicate detected"
     except:
-        data = "Failure"
-    return {"response": data}
+        res = "Failure"
+    return {"response": res}
 
 
 # Update favorite movie, userID as input, movieID as input
@@ -317,14 +347,7 @@ def update_favorite_movie(userID, movieID):
 
     return {"response": data}
 
-userID = 1
-movieID = 'tt2501692'
-userID = str(userID)
-sqlStmt = "DELETE FROM watchlist WHERE user_id = '{}' and movie_id = '{}';".format(userID, movieID)
-cur.execute(sqlStmt)
-conn.commit()
-
-# Update favorite movie, userID as input, movieID as input
+# Delete favorite movie, userID as input, movieID as input
 @app.route("/delete-movie-from-watchlist/<string:userID>/<string:movieID>")
 @cross_origin()
 def delete_from_watchlist(userID, movieID):
@@ -339,6 +362,25 @@ def delete_from_watchlist(userID, movieID):
         data = "Failure"
 
     return {"response": data}
+
+
+
+# Delete from Posts
+@app.route("/delete-post/<string:postID>")
+@cross_origin()
+def delete_post(postID):
+    try:
+        # First get the movie name from the movieID
+        postID = str(postID)
+        sqlStmt = "DELETE FROM posts WHERE post_id = '{}';".format(postID)
+        cur.execute(sqlStmt)
+        conn.commit()
+        data = "Success"
+    except:
+        data = "Failure"
+
+    return {"response": data}
+
 
 
 # Create a post for userID
