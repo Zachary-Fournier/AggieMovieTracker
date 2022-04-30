@@ -249,7 +249,7 @@ def add_user(userName, userPassword):
 # user Id, movie Id, and rating as input -> Add movie review into database (POST)
 # Need to do two things: Add to rating table and add to users table (adding to num_movies_watched)
 # If needed, we can later change the userID to userName and movieID to movie name
-@app.route("/add-rating/<string:userID>/<string:movieID>/<int:num_stars>")
+@app.route("/add-rating/<string:userID>/<string:movieID>/<int:numStars>")
 @cross_origin()
 def add_rating(userID, movieID, numStars):
     try:

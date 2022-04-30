@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react'
 import { Alert, Button, Input } from 'reactstrap';
-import { getMovieInfo, getMoviePoster, getUserInfo, updateFavoriteMovie } from '../Utilities';
+import { addRating, getMovieInfo, getMoviePoster, getUserInfo, updateFavoriteMovie } from '../Utilities';
 
 export default function MoviePage() {
 
@@ -8,6 +8,7 @@ export default function MoviePage() {
     const [moviePosterURL, setMoviePosterURL] = useState();
     const [ratingStars, setRatingStars] = useState(0);
     const [didFavoriteWork, setDidFavoriteWork] = useState(0);
+    const [didRatingWork, setDidRatingWork] = useState(0);
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
     async function getMovie() {
@@ -18,7 +19,14 @@ export default function MoviePage() {
     }
 
     async function rateMovie() {
-        console.log('rateMovie');
+        console.log(ratingStars);
+        let results = await addRating(userInfo.userID, window.location.href.slice(30), ratingStars);
+        console.log('results: ', results)
+        if(results.response == "Success") {
+            setDidRatingWork(1);
+        } else {
+            setDidRatingWork(-1);
+        }
     }
 
     async function updateFavMovie() {
@@ -52,11 +60,23 @@ export default function MoviePage() {
                     <img src={moviePosterURL} style={{width: "25%", height: "50%"}}>
                     </img>
                     <Input
-                    type='number'
-                    value={ratingStars}
-                    onChange={(e) => {setRatingStars(e.target.value)}}
+                        type='select'
+                        value={ratingStars}
+                        onChange={(e) => {setRatingStars(e.target.value)}}
                     >
+                        <option>0</option>
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
                     </Input>
+                    {didRatingWork === 1 &&
+                        <Alert>Your rating for '{movieInfo[0]}' was updated!</Alert>
+                    }
+                    {didRatingWork === -1 &&
+                        <Alert color='danger'>Your rating for '{movieInfo[0]}' did not update! Try again later!</Alert>
+                    }
                     <Button onClick={rateMovie}>Leave a Rating!</Button>
                     {userInfo.favMovie === null ?
                         <Button onClick={updateFavMovie}>Favorite movie!</Button>
