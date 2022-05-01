@@ -1,6 +1,6 @@
 import React, { useEffect, useState} from 'react'
 import { Alert, Button, Input } from 'reactstrap';
-import { addRating, getMovieInfo, getMoviePoster, getUserInfo, updateFavoriteMovie } from '../Utilities';
+import { addRating, addToWatchlist, getMovieInfo, getMoviePoster, getUserInfo, updateFavoriteMovie } from '../Utilities';
 
 export default function MoviePage() {
 
@@ -9,8 +9,17 @@ export default function MoviePage() {
     const [ratingStars, setRatingStars] = useState(0);
     const [didFavoriteWork, setDidFavoriteWork] = useState(0);
     const [didRatingWork, setDidRatingWork] = useState(0);
+    const [didAddWatchlistWork, setDidWatchlistWork] = useState(0);
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
+    async function addWatchlist() {
+        let results = await addToWatchlist(userInfo.userID, window.location.href.slice(30));
+        if(results.response == "Success") {
+            setDidWatchlistWork(1);
+        } else {
+            setDidWatchlistWork(-1);
+        }
+    }
     async function getMovie() {
         let results = await getMovieInfo(window.location.href.slice(30));
         let posterPath = await getMoviePoster(window.location.href.slice(30));
@@ -21,7 +30,6 @@ export default function MoviePage() {
     async function rateMovie() {
         console.log(ratingStars);
         let results = await addRating(userInfo.userID, window.location.href.slice(30), ratingStars);
-        console.log('results: ', results)
         if(results.response == "Success") {
             setDidRatingWork(1);
         } else {
@@ -57,9 +65,8 @@ export default function MoviePage() {
                     <p><b>Duration:</b> {movieInfo[7]} mins</p> <br/>
                     <p><b>Release Date:</b> {movieInfo[5]}</p> <br/>
                     <p><b>Average Rating:</b> </p> <br/>
-                    <img src={moviePosterURL} style={{width: "25%", height: "50%"}}>
-                    </img>
                     <Input
+                    style={{width: '25%', margin: 'auto'}}
                         type='select'
                         value={ratingStars}
                         onChange={(e) => {setRatingStars(e.target.value)}}
@@ -83,16 +90,24 @@ export default function MoviePage() {
                         :
                         <Button onClick={updateFavMovie}>Make this your new favorite movie!</Button>
                     }
+                    <Button onClick={addWatchlist}>Add to your watchlist!</Button>
                     {didFavoriteWork === 1 &&
                     <Alert>'{movieInfo[2]}' is now your favorite movie!</Alert>
                     }
                     {didFavoriteWork === -1 &&
                         <Alert color='danger'>An error occurred, please try again!</Alert>
                     }
-                    {/* <Button onClick={addToWatchlist()}>Add to watchlist!</Button> */}
+                    {didAddWatchlistWork === 1 &&
+                    <Alert>'{movieInfo[2]}' is now added to your watchlist!</Alert>
+                    }
+                    {didAddWatchlistWork === -1 &&
+                        <Alert color='danger'>An error occurred, please try again!</Alert>
+                    }
+                    <br/>
+                    <img src={moviePosterURL} style={{width: "25%", height: "50%"}}></img>
                 </div>
             )
-            }
+        }
         </div>
     )
 }

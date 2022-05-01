@@ -8,6 +8,7 @@ import ProfilePage from './pages/ProfilePage';
 import MoviePage from './pages/MoviePage';
 import RegisterPage from './pages/RegisterPage';
 import NewsFeedPage from './pages/NewsFeedPage';
+import WatchlistPage from './pages/WatchlistPage';
 
 function App() {
 
@@ -53,6 +54,9 @@ function App() {
                 <NavLink href="/#/profile">Profile</NavLink>
               </NavItem>
               <NavItem>
+                <NavLink href="/#/watchlist">Watchlist</NavLink>
+              </NavItem>
+              <NavItem>
                 <NavLink href="/#/newsfeed">News Feed</NavLink>
               </NavItem>
               <NavbarText>
@@ -75,7 +79,8 @@ function App() {
             <>
               <Route path="/newsfeed" element={<NewsFeedPage />}/>
               <Route path={`/movie/:movieID`} element={<MoviePage />} />
-              <Route path="/profile" element={<ProfilePage />}/>
+              <Route path="/profile" element={<ProfilePage />} />
+              <Route path="/watchlist" element={<WatchlistPage />} />
             </>
           :
             <>

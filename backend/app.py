@@ -163,7 +163,6 @@ def get_user_reviews(userName):
 @cross_origin()
 def get_user_watchlist(userName):
     # First find the user id with userName
-    userID = str(userID)
     userId = getUserIdFromUserName(cur, userName)
     cur.execute("select movie_id from watchlist where user_id = (%s);", (userId,))
     data = cur.fetchall()
