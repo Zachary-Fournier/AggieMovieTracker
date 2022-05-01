@@ -83,8 +83,8 @@ def getUserIdFromUserName(cur, userName):
 
 def getUserNameFromUserId(cur, userID):
     cur.execute("select user_name from users where user_id = (%s);", (str(userID),))
-    userName = cur.fetchall()
-    return str(userName[0][0])
+    userName = cur.fetchone()
+    return userName[0]
 
 def getMovieNameFromMovieId(cur, movieID):
     cur.execute("SELECT primarytitle FROM moviesreal WHERE tconst = (%s);", (movieID, ))
@@ -217,14 +217,22 @@ def get_user_posts_id(userId):
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
     return {"posts": data}
 
+
 # GET ALL OF THE POSTS FOR ALL USERS
 @app.route("/get-all-posts/")
 @cross_origin()
 def get_posts():
-    # First find the user id with userName
     cur.execute("select * from posts;")
     data = cur.fetchall()
-    print(data)
+    # Convert data into usernames as well
+    convertedData = []
+    for entry in data:
+        # Change userID to userName
+        userID = entry[1]
+        userName = getUserNameFromUserId(cur, userID)
+        newEntry = [entry[0], entry[1], userName, entry[2]]
+        convertedData.append(newEntry)
+    data = convertedData
 
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
     return {"posts": data}
