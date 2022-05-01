@@ -94,7 +94,19 @@ def getMovieNameFromMovieId(cur, movieID):
 def getMovieIdFromMovieName(cur, movieName):
     cur.execute("SELECT tconst FROM moviesreal WHERE UPPER(moviesreal.primarytitle) = UPPER(%s);", (movieName, ))
     movies = cur.fetchall()
-    return movies[0][0]
+    return movies
+
+# movieID = 'tt2501680'
+# cur.execute("SELECT * FROM moviesreal WHERE tconst = (%s);", (movieID, ))
+# movies = cur.fetchall()
+# print(movies)
+# print(movies[0][0])
+
+def getMovieInfoFromId(cur, movieID):
+    cur.execute("SELECT * FROM moviesreal WHERE tconst = (%s);", (movieID, ))
+    movies = cur.fetchall()
+    # print(movies[0])
+    return movies[0]
     
 # GET USER INFORMATION WITH USERNAME, LATER WE WILL ADD A FUNCTION THAT GETS THE USER ID BASED ON THE USERNAME AND PASSWORD (LOGIN)
 @app.route("/get-user-info/<string:userName>")
@@ -140,14 +152,14 @@ def get_user_id(userName):
 @cross_origin()
 def get_user_reviews(userName):
     userId = getUserIdFromUserName(cur, userName)
-    userID = str(userID)
+    userId = str(userId)
     # First find the user id with userName
     cur.execute("select movie_id, num_stars from rating where user_id = (%s);", (userId,))
     data = cur.fetchall()
     convertedData = []
     # Go through the data and convert the movie id's into movies
     for entry in data:
-        convertedData.append([getMovieNameFromMovieId(cur, entry[0]), entry[1]])
+        convertedData.append(getMovieNameFromMovieId(cur, entry[0]))
 
     data = convertedData
     print(data)
@@ -163,14 +175,16 @@ def get_user_reviews(userName):
 @cross_origin()
 def get_user_watchlist(userName):
     # First find the user id with userName
-    userID = str(userID)
     userId = getUserIdFromUserName(cur, userName)
+    userId = str(userId)
+    # First find the user id with userName
     cur.execute("select movie_id from watchlist where user_id = (%s);", (userId,))
     data = cur.fetchall()
-    # Go through the data and switch to movie names instead of id's
     convertedData = []
+    # Go through the data and convert the movie id's into movies
     for entry in data:
-        convertedData.append(getMovieNameFromMovieId(cur, entry))
+        convertedData.append(getMovieInfoFromId(cur, entry[0]))
+
     data = convertedData
     print(data)
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
