@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom';
-import { Button, Input, Spinner } from 'reactstrap';
+import { Button, Input, Label, Spinner } from 'reactstrap';
 import { getMoviesFromSearch } from '../Utilities';
 
 export default function HomePage() {
@@ -19,7 +19,13 @@ export default function HomePage() {
 
   return (
     <div>
+      <Label for='movieTitle'>
+        Movie Title:
+      </Label>
       <Input type="text"
+      id='movieTitle'
+      style={{width: '50%', margin: 'auto'}}
+      placeholder="Movie title (Spider-Man, Thor, The Batman, etc.)"
       onChange={(e) => setSearchInput(e.target.value)}
       value={searchInput}
       ></Input>

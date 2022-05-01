@@ -60,7 +60,6 @@ export default function MoviePage() {
                     <a href={`https://www.imdb.com/title/${movieInfo[0]}/`} target='_blank' rel="noreferrer">
                     {movieInfo[2]}
                     </a>
-                    <p><b>Movie Title:</b> {movieInfo[2]}</p> <br/>
                     <p><b>Genres:</b> {movieInfo[8]}</p> <br/>
                     <p><b>Duration:</b> {movieInfo[7]} mins</p> <br/>
                     <p><b>Release Date:</b> {movieInfo[5]}</p> <br/>
