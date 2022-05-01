@@ -96,6 +96,15 @@ export async function getMovieInfo(movieID) {
     return movieInfo;
 }
 
+// Get movie info using the get route from backend (app.py) but with name
+export async function getMovieInfoWithName(movieName) {
+    let movieInfo = fetch(`${url}/get-movie-info-with-name/${movieName}`)
+        .then(response => response.json())
+        .then(result => {return result});
+
+    return movieInfo;
+}
+
 // Get movie poster using the get route from backend (app.py)
 export async function getMoviePoster(movieID) {
     let movieInfo = fetch(`https://api.themoviedb.org/3/find/${movieID}?api_key=${tmdbAPIKEY}&external_source=imdb_id`)

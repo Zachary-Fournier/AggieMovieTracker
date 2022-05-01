@@ -247,6 +247,16 @@ def get_movie_info(movieID):
     print(movieInfo)
     return {"movie": movieInfo}
 
+# GET MOVIE INFORMATION WITH MOVIE Name
+@app.route("/get-movie-info-with-name/<string:movieName>")
+@cross_origin()
+def get_movie_info_with_name(movieName):
+    movieID = getMovieIdFromMovieName(movieName)
+    cur.execute("SELECT * FROM moviesreal WHERE tconst = (%s);", (movieID, ))
+    movieInfo = cur.fetchall()
+    print(movieInfo)
+    return {"movie": movieInfo}
+
 # GET MOVIES FROM THE MOVIE NAME (STRING)
 @app.route("/get-movies/<string:movie>")
 @cross_origin()
