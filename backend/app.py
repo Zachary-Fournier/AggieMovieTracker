@@ -147,6 +147,7 @@ def get_user_id(userName):
     
     return {"user_id": userId[0][0]}
 
+
 # GET ALL OF THE MOVIES AND REVIEWS FROM THE ASSOCIATED USER_ID -> Inside of utilities.js need to call username -> id and then also movieid -> moviename to get real movie data
 @app.route("/get-user-reviews/<string:userName>")
 @cross_origin()
@@ -159,7 +160,7 @@ def get_user_reviews(userName):
     convertedData = []
     # Go through the data and convert the movie id's into movies
     for entry in data:
-        convertedData.append(getMovieNameFromMovieId(cur, entry[0]))
+        convertedData.append(getMovieInfoFromId(cur, entry[0]))
 
     data = convertedData
     print(data)
