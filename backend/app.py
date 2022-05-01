@@ -94,7 +94,7 @@ def getMovieNameFromMovieId(cur, movieID):
 def getMovieIdFromMovieName(cur, movieName):
     cur.execute("SELECT tconst FROM moviesreal WHERE UPPER(moviesreal.primarytitle) = UPPER(%s);", (movieName, ))
     movies = cur.fetchall()
-    return movies
+    return movies[0][0]
 
 # movieID = 'tt2501680'
 # cur.execute("SELECT * FROM moviesreal WHERE tconst = (%s);", (movieID, ))
@@ -247,13 +247,14 @@ def get_movie_info(movieID):
     print(movieInfo)
     return {"movie": movieInfo}
 
+
 # GET MOVIE INFORMATION WITH MOVIE Name
 @app.route("/get-movie-info-with-name/<string:movieName>")
 @cross_origin()
 def get_movie_info_with_name(movieName):
-    movieID = getMovieIdFromMovieName(movieName)
+    movieID = getMovieIdFromMovieName(cur, movieName)
     cur.execute("SELECT * FROM moviesreal WHERE tconst = (%s);", (movieID, ))
-    movieInfo = cur.fetchall()
+    movieInfo = cur.fetchone()
     print(movieInfo)
     return {"movie": movieInfo}
 
