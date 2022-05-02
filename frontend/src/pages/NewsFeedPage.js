@@ -34,18 +34,20 @@ export default function NewsFeedPage() {
     }
 
     /**
-     * function adds post using the userID and the content in the text box
-     * written by Jash Choksi
+     * function adds a post using the userID and postContent
+     * @param {*} userID the id of the user that is adding the post
+     * @param {*} postContent the text input retrieved from the input box
      */
     async function add(userID, postContent) {
         let result = await addPost(userID, postContent);
         window.location.reload();
     }
 
-    /**
-     * function removes a post using the postID
-     * written by Jash Choksi
-     */
+   /**
+    * function deletes a post using the postID 
+    * @param {*} postID the id of the post to be deleted
+    * written by Jash Choksi
+    */
     async function remove(postID) {
         let result = await deletePost(postID);
         window.location.reload();
@@ -53,7 +55,6 @@ export default function NewsFeedPage() {
 
     /**
      * gets all the posts and user info on render
-     * written by Jash Choksi
      */
     useEffect(() => {
         getPosts();
