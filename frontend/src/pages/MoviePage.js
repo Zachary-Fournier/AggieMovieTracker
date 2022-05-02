@@ -20,6 +20,8 @@ export default function MoviePage() {
         let results = await addToWatchlist(userInfo.userID, window.location.href.slice(30));
         if(results.response == "Success") {
             setDidWatchlistWork(1);
+            userInfo.numMovies++;
+            localStorage.setItem('userInfo', JSON.stringify(userInfo));
         } else {
             setDidWatchlistWork(-1);
         }
@@ -92,10 +94,10 @@ export default function MoviePage() {
                         <option>5</option>
                     </Input>
                     {didRatingWork === 1 &&
-                        <Alert>Your rating for '{movieInfo[0]}' was updated!</Alert>
+                        <Alert>Your rating for '{movieInfo[2]}' was updated!</Alert>
                     }
                     {didRatingWork === -1 &&
-                        <Alert color='danger'>Your rating for '{movieInfo[0]}' did not update! Try again later!</Alert>
+                        <Alert color='danger'>Your rating for '{movieInfo[2]}' did not update! Try again later!</Alert>
                     }
                     <Button onClick={rateMovie}>Leave a Rating!</Button>
                     {userInfo.favMovie === null ?

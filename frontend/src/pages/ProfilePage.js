@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Spinner } from 'reactstrap';
-import { getMoviePoster, getMovieInfoWithName } from '../Utilities';
+import { getMoviePoster, getMovieInfoWithName, getUserReviews } from '../Utilities';
 
 export default function ProfilePage() {
   
@@ -9,6 +9,7 @@ export default function ProfilePage() {
   const [userType, setUserType] = useState("");
   const [userFavMovie, setFavMovie] = useState("");
   const [userNumMovies, setNumMovies] = useState("");
+  const [reviews, setReviews] = useState([]);
   // const [moviePosterURL, setMoviePosterURL] = useState();
   const [isLoading] = useState(false);
 
@@ -36,9 +37,9 @@ export default function ProfilePage() {
       } else {
         setFavMovie(userInfo.favMovie);
       }
-      // let result = await getMoviePoster(userInfo.favMovie[0]);
-      // setMoviePosterURL(`http://image.tmdb.org/t/p/original${result.movie_results[0].poster_path}`)
     }
+    let reviewResults = await getUserReviews(userInfo.user_name);
+    setReviews(reviewResults.movie_ratings);
   }
 
   /**
@@ -61,6 +62,16 @@ export default function ProfilePage() {
         <p><b>Number of Movies Watched:</b> {userNumMovies}</p>
         <p><b>Favorite Movie:</b> {userFavMovie}</p>
         {/* <img src={moviePosterURL} style={{width: "25%", height: "50%"}}></img> */}
+        <h1>Your Reviews</h1>
+        {reviews.length !== 0 &&
+          reviews.map((review, i) => {
+            return (
+              <div key={i}>
+                You gave {review[0][2]}({review[0][5]}) a rating of {review[1]} stars
+              </div>
+            )
+          })
+        }
       </div>
     )  
 }

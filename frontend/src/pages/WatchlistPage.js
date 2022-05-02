@@ -19,7 +19,7 @@ export default function WatchlistPage() {
         if(result.response === "Success") {
             setRemoveSuccessful(1);
             window.location.reload();
-            userInfo.numMovies++;
+            userInfo.numMovies--;
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
         } else {
             setRemoveSuccessful(0);
