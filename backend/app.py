@@ -96,12 +96,6 @@ def getMovieIdFromMovieName(cur, movieName):
     movies = cur.fetchall()
     return movies[0][0]
 
-# movieID = 'tt2501680'
-# cur.execute("SELECT * FROM moviesreal WHERE tconst = (%s);", (movieID, ))
-# movies = cur.fetchall()
-# print(movies)
-# print(movies[0][0])
-
 def getMovieInfoFromId(cur, movieID):
     cur.execute("SELECT * FROM moviesreal WHERE tconst = (%s);", (movieID, ))
     movies = cur.fetchall()
