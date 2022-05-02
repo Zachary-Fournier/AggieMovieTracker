@@ -15,7 +15,6 @@ export default function ProfilePage() {
 
   /**
    * function gets user info from local storage and sets it to respective variables
-   * function also gets info to display poster of user's favorite movie
    * written by Jash Choksi
    */
   async function getProfile() {
