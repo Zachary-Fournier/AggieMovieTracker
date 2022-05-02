@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Button, Label, Input } from 'reactstrap';
-import { getAllPosts, addPost, deletePost, getUserInfo } from '../Utilities';
+import { getAllPosts, addPost, deletePost } from '../Utilities';
 
 export default function NewsFeedPage() {
     const [isAdmin, setIsAdmin] = useState(false);
