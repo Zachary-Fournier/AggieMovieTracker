@@ -1,3 +1,6 @@
+//Written by Zachary Fournier
+//this code is utalized for assisting the backend
+
 const url = "http://localhost:5000"
 
 const tmdbAPIKEY = "b5ce997bdba83155626b1dc7815961ae"
