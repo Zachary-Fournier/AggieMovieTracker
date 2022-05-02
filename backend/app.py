@@ -1,14 +1,15 @@
-# MAHIR KHAN
+# WRITTEN BY MAHIR KHAN
 
 
 # How do we get the info from the frontend? Through a form? Through the URL?
-# Once we find out how we get the info from frontend and how the frontend wants the
-# info back, we can start creating our routes
+# It will be through routes that we create here.
+
 # We also need to create the new tables in PGADMIN 
 #   - User, Watchlist, Rating, Post
 #   - Do not need genre (already given with movies table)
 #   - Movies table already made
 
+# New tables that we can alter in PGAdmin
 # User Table
 # Attributes: user_id (PK), user_age, user_first_name, user_last_name, user_favorite_movie_id, user_password, user_creation_date, is_admin
 # Watchlist Table
@@ -166,7 +167,6 @@ def get_user_reviews(userName):
 
 
 # GET ALL OF THE MOVIES IN WATCHLIST FROM ASSOCIATED USER_ID -> LIST OF MOVIE IDS THAT NEED TO BE CONVERTED INTO MOVIES WITH OTHER ROUTE (movie id -> movie)
-
 @app.route("/get-user-watchlist/<string:userName>")
 @cross_origin()
 def get_user_watchlist(userName):
@@ -199,7 +199,7 @@ def get_user_posts(userId):
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
     return {"posts": data}
 
-
+# GETS POSTS ID FOR A CERTAIN USER WITH THE USER ID
 @app.route("/get-user-posts-id/<string:userId>")
 @cross_origin()
 def get_user_posts_id(userId):
@@ -228,6 +228,7 @@ def get_posts():
         newEntry = [entry[0], entry[1], userName, entry[2]]
         convertedData.append(newEntry)
     data = convertedData
+    print(data)
 
     # Remember that the data is inside of a tuple, so we need to query like this: tuple_data[0]
     return {"posts": data}
@@ -436,6 +437,74 @@ def add_post(userID, postDescription):
         data = "Failure"
     return {"response": data}
 
+def testCases(cur):
+    # Get info for user John Doe
+    userName = "John Doe"
+    cur.execute("SELECT * FROM users WHERE UPPER(users.user_name) = UPPER(%s);", (userName,))
+    userInfo = cur.fetchall()[0]
+    print(userInfo)
 
+    # Get user passwrod for John Doe
+    cur.execute("SELECT password FROM users WHERE UPPER(users.user_name) = UPPER(%s);", (userName,))
+    userPass = cur.fetchall()
+    print(userPass)
+
+    # Get user id for user John Doe
+    cur.execute("select user_id from users where user_name = (%s);", (userName,))
+    userId = cur.fetchall()
+
+    # Get user reviews for John Doe
+    userId = getUserIdFromUserName(cur, userName)
+    userId = str(userId)
+    # First find the user id with userName
+    cur.execute("select movie_id, num_stars from rating where user_id = (%s);", (userId,))
+    data = cur.fetchall()
+    print('data: ', data)
+    convertedData = []
+    # Go through the data and convert the movie id's into movies
+    for entry in data:
+        convertedData.append((getMovieInfoFromId(cur, entry[0]), entry[1]))
+
+    data = convertedData
+    print(data)
+
+    # Get movie watchlist for user John Doe
+    userId = getUserIdFromUserName(cur, userName)
+    userId = str(userId)
+    # First find the user id with userName
+    cur.execute("select movie_id from watchlist where user_id = (%s);", (userId,))
+    data = cur.fetchall()
+    convertedData = []
+    # Go through the data and convert the movie id's into movies
+    for entry in data:
+        convertedData.append(getMovieInfoFromId(cur, entry[0]))
+
+    data = convertedData
+    print(data)
+
+    # Get posts for user John Doe
+    userID = getUserIdFromUserName(cur, userName)
+    userID = str(userID)
+    # First find the user id with userName
+    cur.execute("select post_description from posts where user_id = (%s);", (userId,))
+    data = cur.fetchall()
+    print(data)
+
+    # Get all posts
+    cur.execute("select * from posts;")
+    data = cur.fetchall()
+    # Convert data into usernames as well
+    convertedData = []
+    for entry in data:
+        # Change userID to userName
+        userID = entry[1]
+        userName = getUserNameFromUserId(cur, userID)
+        newEntry = [entry[0], entry[1], userName, entry[2]]
+        convertedData.append(newEntry)
+    data = convertedData
+    print(data)
+
+# Test cases, comment out if you want to test
+# testCases(cur)
 if __name__ == '__main__':
     app.run()
