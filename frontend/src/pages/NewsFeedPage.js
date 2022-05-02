@@ -15,6 +15,7 @@ export default function NewsFeedPage() {
     /**
      * function gets user information from local storage
      * the user id and whether or not they are an admin are set to their respective state variables
+     * written by Jash Choksi
      */
     async function getUserInfo() {
         const item = localStorage.getItem("userInfo");
@@ -25,6 +26,7 @@ export default function NewsFeedPage() {
     
     /**
      * gets all the posts in the database and sets them to the "posts" state variable
+     * written by Jash Choksi
      */
     async function getPosts() {
         let results = await getAllPosts();
@@ -32,7 +34,8 @@ export default function NewsFeedPage() {
     }
 
     /**
-     * function adds post using the userID and the content in the text box 
+     * function adds post using the userID and the content in the text box
+     * written by Jash Choksi
      */
     async function add(userID, postContent) {
         let result = await addPost(userID, postContent);
@@ -41,17 +44,26 @@ export default function NewsFeedPage() {
 
     /**
      * function removes a post using the postID
+     * written by Jash Choksi
      */
     async function remove(postID) {
         let result = await deletePost(postID);
         window.location.reload();
     }
 
+    /**
+     * gets all the posts and user info on render
+     * written by Jash Choksi
+     */
     useEffect(() => {
         getPosts();
         getUserInfo();
     }, [])
 
+    /**
+     * displays components and allows access to news feed based on whether or not user is admin
+     * written by Jash Choksi
+     */
     if (isAdmin) {
         return (
             <div>
