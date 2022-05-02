@@ -2,12 +2,20 @@ import React, { useEffect, useState } from 'react'
 import { Button, Label, Input } from 'reactstrap';
 import { getAllPosts, addPost, deletePost } from '../Utilities';
 
+/**
+ * displays posts, allows admins to add and delete posts
+ * written by Jash Choksi
+ */
 export default function NewsFeedPage() {
     const [isAdmin, setIsAdmin] = useState(false);
     const [userID, setUserID] = useState();
     const [posts, setPosts] = useState([]);
     const [postContent, setPostContent] = useState();
 
+    /**
+     * function gets user information from local storage
+     * the user id and whether or not they are an admin are set to their respective state variables
+     */
     async function getUserInfo() {
         const item = localStorage.getItem("userInfo");
         const userInfo = JSON.parse(item);
@@ -15,16 +23,25 @@ export default function NewsFeedPage() {
         setUserID(userInfo.userID);
     }
     
+    /**
+     * gets all the posts in the database and sets them to the "posts" state variable
+     */
     async function getPosts() {
         let results = await getAllPosts();
         setPosts(results.posts);
     }
 
+    /**
+     * function adds post using the userID and the content in the text box 
+     */
     async function add(userID, postContent) {
         let result = await addPost(userID, postContent);
         window.location.reload();
     }
 
+    /**
+     * function removes a post using the postID
+     */
     async function remove(postID) {
         let result = await deletePost(postID);
         window.location.reload();
