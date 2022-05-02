@@ -12,6 +12,10 @@ export default function MoviePage() {
     const [didAddWatchlistWork, setDidWatchlistWork] = useState(0);
     const userInfo = JSON.parse(localStorage.getItem('userInfo'));
 
+    /**
+     * this function will add the movie to the user's watchlist
+     * Written by Mark Treviño
+     */
     async function addWatchlist() {
         let results = await addToWatchlist(userInfo.userID, window.location.href.slice(30));
         if(results.response == "Success") {
@@ -20,15 +24,22 @@ export default function MoviePage() {
             setDidWatchlistWork(-1);
         }
     }
+    
+    /**
+     * this will get all of the movie's information including the poster for it
+     * Written by Mark Treviño
+     */
     async function getMovie() {
         let results = await getMovieInfo(window.location.href.slice(30));
         let posterPath = await getMoviePoster(window.location.href.slice(30));
         setMovieInfo(results.movie[0]);
         setMoviePosterURL(`http://image.tmdb.org/t/p/original${posterPath.movie_results[0].poster_path}`)
     }
-
+    /**
+     * This function will create a new entry on the ratings table with a star rating from 0-5
+     * Written by Mark Treviño
+     */
     async function rateMovie() {
-        console.log(ratingStars);
         let results = await addRating(userInfo.userID, window.location.href.slice(30), ratingStars);
         if(results.response == "Success") {
             setDidRatingWork(1);
@@ -36,7 +47,10 @@ export default function MoviePage() {
             setDidRatingWork(-1);
         }
     }
-
+    /**
+     * This funcstion will update the user's favorite movie
+     * Written by Mark Treivño
+     */
     async function updateFavMovie() {
         let result = await updateFavoriteMovie(userInfo.userID, movieInfo[0]);
         if(result.response === "Success") {

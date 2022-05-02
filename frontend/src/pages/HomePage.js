@@ -10,6 +10,10 @@ export default function HomePage() {
   const [movieResults, setMovieResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   
+  /**
+   * this function will query the database to find all movies that match a search query
+   * Written by Mark Treviño
+   */
   async function onSearchButtonClick() {
     setIsLoading(true);
     let results = await getMoviesFromSearch(searchInput);
