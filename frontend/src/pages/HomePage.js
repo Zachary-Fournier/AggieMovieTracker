@@ -23,11 +23,11 @@ export default function HomePage() {
         Movie Title:
       </Label>
       <Input type="text"
-      id='movieTitle'
-      style={{width: '50%', margin: 'auto'}}
-      placeholder="Movie title (Spider-Man, Thor, The Batman, etc.)"
-      onChange={(e) => setSearchInput(e.target.value)}
-      value={searchInput}
+        id='movieTitle'
+        style={{width: '50%', margin: 'auto'}}
+        placeholder="Movie title (Spider-Man, Thor, The Batman, etc.)"
+        onChange={(e) => setSearchInput(e.target.value)}
+        value={searchInput}
       ></Input>
       <Button onClick={onSearchButtonClick}>Search for movies!</Button>
       {movieResults.length !== 0 &&

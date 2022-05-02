@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Spinner } from 'reactstrap';
-import { getMoviePoster } from '../Utilities';
+import { getMoviePoster, getMovieInfoWithName } from '../Utilities';
 
 export default function ProfilePage() {
+  
   const [userName, setUserName] = useState("");
+  const [userID, setUserID] = useState("");
   const [userType, setUserType] = useState("");
   const [userFavMovie, setFavMovie] = useState("");
   const [userNumMovies, setNumMovies] = useState("");
@@ -19,6 +21,7 @@ export default function ProfilePage() {
     const item = localStorage.getItem("userInfo");
     const userInfo = JSON.parse(item);
     setUserName(userInfo.user_name);
+    setUserID(userInfo.userID);
     if (userInfo.isAdmin) {
       setUserType("Admin");
     } else {
@@ -28,9 +31,18 @@ export default function ProfilePage() {
     if (userInfo.favMovie === null) {
       setFavMovie("None");
     } else {
-      setFavMovie(userInfo.favMovie[2]);
-      let result = await getMoviePoster(userInfo.favMovie[0]);
-      setMoviePosterURL(`http://image.tmdb.org/t/p/original${result.movie_results[0].poster_path}`)
+      if (Array.isArray(userInfo.favMovie)) {
+        setFavMovie(userInfo.favMovie[2]);
+        let result = await getMoviePoster(userInfo.favMovie[0]);
+        setMoviePosterURL(`http://image.tmdb.org/t/p/original${result.movie_results[0].poster_path}`)
+      } else {
+        setFavMovie(userInfo.favMovie);
+        let movieInfo = await getMovieInfoWithName(userInfo.favMovie);
+        console.log(movieInfo);
+        let result = await getMoviePoster(movieInfo.movie[0]);
+        console.log(result);
+        setMoviePosterURL(`http://image.tmdb.org/t/p/original${result.movie_results[0].poster_path}`)
+      }
     }
   }
 
@@ -49,11 +61,11 @@ export default function ProfilePage() {
         <br/>
 
         <p><b>Username:</b> {userName}</p>
+        <p><b>User ID:</b> {userID}</p>
         <p><b>User Type:</b> {userType}</p>
         <p><b>Number of Movies Watched:</b> {userNumMovies}</p>
         <p><b>Favorite Movie:</b> {userFavMovie}</p>
         <img src={moviePosterURL} style={{width: "25%", height: "50%"}}></img>
-        
       </div>
     )  
 }
