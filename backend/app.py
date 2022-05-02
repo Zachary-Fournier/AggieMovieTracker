@@ -1,4 +1,4 @@
-# WRITTEN BY MAHIR KHAN (Dates: April 10 - May 1)
+# FILE WRITTEN BY MAHIR KHAN (Dates: April 10 - May 1)
 
 
 # How do we get the info from the frontend? Through a form? Through the URL?
