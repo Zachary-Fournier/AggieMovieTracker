@@ -247,7 +247,6 @@ def get_movie_info(movieID):
     print(movieInfo)
     return {"movie": movieInfo}
 
-
 # GET MOVIE INFORMATION WITH MOVIE Name
 @app.route("/get-movie-info-with-name/<string:movieName>")
 @cross_origin()
