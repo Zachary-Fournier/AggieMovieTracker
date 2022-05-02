@@ -8,22 +8,32 @@ export default function WatchlistPage() {
     const [removeSuccessful, setRemoveSuccessful] = useState(0);
     const [watchlist, setWatchlist] = useState([]);
 
+    /**
+     * this function will remove a specific movie from the user's watchlist and will force 
+     * a refresh so the updated watchlist will render.
+     * @param {string} movieID the ID of the movie that is to be removed from the user's watchlist 
+     * Written by Mark Treviño
+     */
     async function remove(movieID) {
         let result = await deleteFromWatchlist(userInfo.userID, movieID);
         if(result.response === "Success") {
             setRemoveSuccessful(1);
             window.location.reload();
-            userInfo.numMovies++;
+            userInfo.numMovies--;
             localStorage.setItem('userInfo', JSON.stringify(userInfo));
         } else {
             setRemoveSuccessful(0);
         }
 
     }
+    /**
+     * this function is called whenever a user navigates to the watchlist page,
+     * it will make an api call to retreive all of the movies in a player's watchlist
+     * Written by Mark Treviño
+     */
     async function getWatchlist() {
         let results = await getUserWatchlist(userInfo.user_name);
         setWatchlist(results.movie_watchlist);
-        console.log('watchlist: ', watchlist);
     }
 
     useEffect(() => {

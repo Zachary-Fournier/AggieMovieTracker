@@ -151,10 +151,11 @@ def get_user_reviews(userName):
     # First find the user id with userName
     cur.execute("select movie_id, num_stars from rating where user_id = (%s);", (userId,))
     data = cur.fetchall()
+    print('data: ', data)
     convertedData = []
     # Go through the data and convert the movie id's into movies
     for entry in data:
-        convertedData.append(getMovieInfoFromId(cur, entry[0]))
+        convertedData.append((getMovieInfoFromId(cur, entry[0]), entry[1]))
 
     data = convertedData
     print(data)
